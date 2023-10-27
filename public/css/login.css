@@ -1,0 +1,128 @@
+body {
+    background: #FFFFFF;
+    font-family: 'Poppins';
+}
+
+.backroundC {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background: #5A738E;
+    height: 50%;
+    width: 100%;
+}
+
+.position {
+    align-content: center;
+}
+
+.imgBackround {
+    height: 500px;
+    width: 60%;
+    object-fit: cover;
+    object-position: 10% 5%;
+    margin-top: 100px;
+    position: relative;
+    mix-blend-mode: lighten;
+}
+
+.container {
+    position: fixed;
+    margin-top: 3%;
+    border-radius: 40px;
+    right: 20px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 35px rgba(0, 0, 0, 0.08);
+    min-width: 300px;
+    width: 600px;
+    height: 720px;
+    margin-right: 5%;
+    top: 20px;
+    bottom: 20px;
+}
+
+.logo {
+    border-radius: 100%;
+    width: 15%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-left: 44%;
+    margin-top: 40px;
+}
+
+#larger {
+    font-family: 'Poppins';
+    font-size: 42px;
+}
+
+#smaller {
+    font-family: 'Poppins';
+    font-size: smaller;
+}
+
+#lupa-password {
+    font-family: 'Poppins';
+    font-size: xx-small;
+    margin-left: 75%;
+}
+
+.margin-l {
+    margin-left: 60px;
+}
+
+input[type=text],
+[type=password],
+select {
+    width: 80%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+}
+
+input[type=button] {
+    width: 80%;
+    padding: 14px 20px;
+    display: inline-block;
+    border: 1px solid #0089ED ;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: #5A738E;
+    border-radius: 15px;
+    margin-left: 60px;
+    color: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-top: 40px;
+    font-size: medium;
+}
+
+@media screen and (max-width:800px) {
+    .backroundC {
+        height: 30%;
+        width: 100%;
+    }
+    .container {
+        width: 400px;
+        height: 650px;
+        margin-top: 5%;
+    }
+    .imgBackround {
+        width: 50%;
+        height: 300px;
+        margin-left: 30%;
+        margin-top: auto;
+    }
+    #larger {
+        font-size: 32px;
+    }
+    input[type=button] {
+        margin-top: 10px;
+    }
+    .logo {
+        margin-top: 50px;
+    }
+    .margin-l {
+        margin-left: 40px;
+    }
+}
