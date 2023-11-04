@@ -8,6 +8,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KategoriPelangganController;
 use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\konfirmasiGudangController;
+use App\Http\Controllers\laporanController;
 use App\Http\Controllers\Nota_pembelianController;
 use App\Http\Controllers\Nota_pemesananController;
 use App\Http\Controllers\PegawaiController;
@@ -71,4 +72,10 @@ Route::resource('/jabatan', JabatanController::class);
 
 //Outlet
 Route::resource('/penjualan', PenjualanController::class);
+Route::get('/daftar-penjualan', [PenjualanController::class ,'daftarPenjualan'])->name('daftar-penjualan');
+Route::post('/detail-penjualan', [PenjualanController::class ,'getDetail'])->name('getDetail');
 
+//LAPORAN
+Route::resource('/laporan', laporanController::class);
+Route::get('/laporan-harian', [laporanController::class ,'laporanHarian'])->name('laporanHarian');
+Route::get('/laporan-produk', [laporanController::class ,'laporanProduk'])->name('laporanProduk');

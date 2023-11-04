@@ -17,4 +17,8 @@ class jenis_pembayaran extends Model
     {
         return $this->hasMany(pembayaran::class ,'jenis_pembayaran_id' , 'id');
     }
+
+    public function penjualan(){
+        return $this->hasMany(penjualan::class , 'jenis_pembayaran_id' , 'id');
+    }
 }

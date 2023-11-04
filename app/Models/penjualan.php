@@ -16,4 +16,13 @@ class penjualan extends Model
     {
         return $this->belongsToMany(produk::class ,'detail_nota_penjualan','nota_penjualan_id','produk_id')->withPivot('jumlah');
     }
+    public function jenis_pembayaran(){
+        return $this->belongsTo(jenis_pembayaran::class , 'jenis_pembayaran_id');
+    }
+    public function outlet(){
+        return $this->belongsTo(outlet::class , 'outlet_id');
+    }
+    public function pelanggan(){
+        return $this->belongsTo(pelanggan::class , 'pelanggan_id');
+    }
 }

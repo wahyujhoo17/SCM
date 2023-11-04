@@ -81,7 +81,7 @@ select {
     font-family: 'Poppins';
 }
 
-input[type=button] {
+input[type=submit] {
     width: 80%;
     padding: 14px 20px;
     display: inline-block;

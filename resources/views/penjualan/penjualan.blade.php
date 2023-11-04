@@ -33,7 +33,7 @@
     <div class="clearfix"></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div class="x_panel">
                     <div class="x_content">
                         <section class="content invoice">
@@ -88,8 +88,12 @@
                                             </tbody>
 
                                         </table>
+
                                         <button class="btn btn-danger delete" id="removeRows" type="button">-
                                             Delete</button>
+
+
+
                                     </div>
                                     <!-- /.col -->
                                 </div>
@@ -106,6 +110,19 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <div class="col-md-8 col-sm-8 ">
+                            {{-- Outlet --}}
+                            <div class="item form-group">
+                                <label class="col-form-label label-align" for="first-name">Outlet
+                                    <span class="required">*</span>
+                                </label>
+                            </div>
+                            <select name="outlet" id="outlet" required="required" class="form-control ">
+                                @foreach ($outlet as $o)
+                                    <option value="{{ $o->id }}">{{ $o->nama }}</option>
+                                @endforeach
+                            </select>
+                            <br>
+                            {{-- NAMA PEMBELI --}}
                             <div class="item form-group">
                                 <label class="col-form-label label-align" for="first-name">Nama Pembeli
                                     <span class="required">*</span>
@@ -118,8 +135,8 @@
                                         {{ $selected = 'selected' }}
                                     @else
                                     @endif
-                                    <option value="{{ $p->id }}" {{ $selected }}>{{ $p->nama }}
-                                    </option>
+                                    <option value="{{ $p->id }}|{{ $p->kategori_pelanggan->nominal_diskon }}"
+                                        {{ $selected }}>{{ $p->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -134,14 +151,36 @@
                             </label>
                             <div class="col-md-9 col-sm-9 ">
                                 <input type="text" class="form-control" name="total_harga" id="total_harga"
-                                    readonly="readonly" value="0">
+                                    readonly="readonly" value="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-3 col-sm-3 ">Diskon <span class="required">% *</span>
+                            </label>
+                            <div class="col-md-9 col-sm-9 ">
+                                <input type="number" class="form-control" name="diskon" id="diskon" value="0"
+                                    required style="width: 50%">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-3 col-sm-3 ">Metode bayar <span class="required">*</span>
+                            </label>
+                            <div class="col-md-9 col-sm-9 ">
+                                <select name="metode_bayar" id="metode_bayar" class="form-control">
+                                    @foreach ($pembayaran as $p)
+                                        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-form-label col-md-3 col-sm-3 ">Nominal <span class="required">*</span></label>
+                            <label class="col-form-label col-md-3 col-sm-3 ">Nominal <span
+                                    class="required">*</span></label>
                             <div class="col-md-9 col-sm-9 ">
                                 <input type="text" class="form-control" name="nominal" placeholder="Nominal Bayar"
-                                    id="nominal">
+                                    id="nominal" required>
                             </div>
                         </div>
 
@@ -150,14 +189,14 @@
                             </label>
                             <div class="col-md-9 col-sm-9 ">
                                 <input type="text" class="form-control" id="kembalian" readonly="readonly"
-                                    name="kembalian" placeholder="Kembalian">
+                                    name="kembalian" placeholder="Kembalian" required>
                             </div>
                         </div>
 
                         <div class="ln_solid"></div>
                         <div class="form-group row">
                             <div class="  offset-md-3">
-                                <button type="button" class="btn btn-primary">Cancel</button>
+                                {{-- <button type="button" class="btn btn-primary">Cancel</button> --}}
                                 <button class="btn btn-primary" type="reset">Reset</button>
                                 <button type="submit" class="btn btn-success">Submit</button>
                             </div>
@@ -191,6 +230,13 @@
 @endsection
 @section('javascript')
     <script>
+        //Pembeli change
+        $("#nama-pembeli").on('change', function() {
+            value = $("#nama-pembeli").val().split("|");
+            $("#diskon").val(value[1]);
+            calculateTotal();
+            // console.log(value[1]);
+        });
         //end function
         $(document).ready(function() {
             $("#nama-pembeli").select2();
@@ -216,7 +262,6 @@
             return rupiahFormat;
         }
 
-
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(','),
@@ -233,6 +278,7 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
 
+        //BAYAR
         var tanpa_rupiah = document.getElementById('nominal');
         tanpa_rupiah.addEventListener('keyup', function(e) {
             tanpa_rupiah.value = formatRupiah(this.value);
@@ -241,6 +287,12 @@
             nominal = $('#nominal').val().replaceAll('.', '');
             console.log(nominal - total);
             $('#kembalian').val(rupiah(nominal - total));
+        });
+        //DISKON
+        var diskon = document.getElementById('diskon');
+
+        diskon.addEventListener('keyup', function(e) {
+            calculateTotal();
         });
 
         $(document).on('blur', "[id^=quantity_]", function() {
@@ -259,13 +311,23 @@
                 if (!quantity) {
                     quantity = 1;
                 }
-                // console.log("UNRUP : " + unrup);
                 var total = unrup * quantity;
                 $('#total_' + id).val(rupiah(total));
                 totalAmount += total;
             });
 
+            var diskon =(totalAmount*$("#diskon").val())/100;
+
+            totalAmount = totalAmount - diskon;
+            console.log("diskon" + totalAmount);
             $('#total_harga').val(rupiah(totalAmount));
+        }
+
+        //Alert Berhasil
+        var msg = '{{ Session::get('alert') }}';
+        var exist = '{{ Session::has('alert') }}';
+        if (exist) {
+            swal("Success", msg, "success");
         }
     </script>
 
@@ -276,6 +338,8 @@
         var count = $(".itemRow").length;
         //ADD DATA ON TABLE
         function addTables(id, nama, harga) {
+
+            calculateTotal();
 
             var variable = '' +
                 '                                            <tr>' +
@@ -336,15 +400,18 @@
                         } else {
                             // console.log('TDK sama');
                             param = 'tidak sama';
+
                         }
                     }
                     console.log(param);
                     if (param == "sama") {
                         Qty = parseInt($('#quantity_' + i).val());
                         $('#quantity_' + i).val(Qty + 1);
+                        calculateTotal();
                     } else {
                         count++;
                         addTables(id, nama, harga);
+                        calculateTotal();
                     }
 
                 },
@@ -374,6 +441,7 @@
                 if (c == 0) {
                     c++;
                     addItem(barcode, 'barcode');
+                    calculateTotal();
                 }
             });
             barcode.init();
@@ -384,8 +452,9 @@
 
             if (id != '') {
                 addItem(id, 'id')
+                calculateTotal();
             }
-
+            calculateTotal();
         }
 
         $('#modalScane').on('hidden.bs.modal', function() {

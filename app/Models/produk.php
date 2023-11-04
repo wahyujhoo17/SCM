@@ -45,7 +45,7 @@ class produk extends Model
 
     public function nota_penjualan()
     {
-        return $this->belongsToMany(nota_penjualan::class, 'detail_nota_penjualan','produk_id','nota_penjualan_id');
+        return $this->belongsToMany(penjualan::class, 'detail_nota_penjualan','produk_id','nota_penjualan_id')->withPivot('jumlah');
     }
 }
 

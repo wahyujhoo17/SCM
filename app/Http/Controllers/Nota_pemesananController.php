@@ -55,7 +55,7 @@ class Nota_pemesananController extends Controller
         //
         $totalHarga = 0;
         if ($jenis == "Barang") {
-            $id_generator = IdGenerator::generate((['table' => 'nota_pemesanan', 'field' => 'no_nota', 'length' => 9, 'prefix' => 'NB-']));
+            $id_generator = IdGenerator::generate((['table' => 'nota_pemesanan', 'field' => 'no_nota', 'length' => 12, 'prefix' => 'NB-'.date('d')]));
 
             $nota_barang = new nota_pemesanan();
             $nota_barang->pemasok_id = $pemasok;
@@ -81,7 +81,7 @@ class Nota_pemesananController extends Controller
             $update_harga->save();
             return redirect()->back()->with('alert', 'Data berhasil ditambahkan!');
         } else {
-            $id_generator = IdGenerator::generate((['table' => 'nota_pemesanan', 'field' => 'no_nota', 'length' => 9, 'prefix' => 'NP-']));
+            $id_generator = IdGenerator::generate((['table' => 'nota_pemesanan', 'field' => 'no_nota', 'length' => 12, 'prefix' => 'NP-'.date('d')]));
 
             $nota_produk = new nota_pemesanan();
             $nota_produk->pemasok_id = $pemasok;
