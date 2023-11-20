@@ -31,7 +31,6 @@
             display: none;
         }
     </style>
-
     <br><br>
     <div class="container">
         <div class="row">
@@ -43,7 +42,7 @@
         </div>
     </div>
 
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+    <table id="datatable" class="table table-striped jambo_table bulk_action" style="width:100%">
 
         <thead>
             <tr>
@@ -51,7 +50,8 @@
                 <th>Nama</th>
                 <th>Barcode</th>
                 <th>Harga Jual</th>
-                <th>Stok</th>
+                <th>Stok Gudang</th>
+                <th>Total Stok</th>
                 <th>Kategori Produk</th>
                 <th>Aksi</th>
             </tr>
@@ -65,6 +65,9 @@
                     <td>{{ $produk->nama }}</td>
                     <td>{{ $produk->barcode }}</td>
                     <td>{{ $produk->harga_jual }} </td>
+                    @php
+                    $jumlah = 0;
+                @endphp
                     <td>
                         <table style="width: 100%">
                             <tr>
@@ -77,6 +80,9 @@
                                 <td>-</td>
                             @else
                                 @foreach ($produk->gudang as $pg)
+                                @php
+                                    $jumlah += $pg->pivot->jumlah ; 
+                                @endphp
                                 <tr>
                                     <td>{{ $pg->pivot->jumlah }}</td>
                                     <td>{{ $pg->nama }}</td>
@@ -85,6 +91,7 @@
                             @endif
                         </table>
                     </td>
+                    <td>{{ $jumlah }}</td>
                     <td>{{ $produk->kategori->nama }}</td>
                     <td><a href="#UmodalProduk" id="edit" class="btn btn-primary" data-toggle="modal"
                             data-target=".UmodalProduk" onclick="editData({{ $produk->id }})">Edit</a>
@@ -127,7 +134,7 @@
                                     class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 ">
-                                <input type="number" id="barcode" name="barcode" required="required"
+                                <input type="number" id="barcode" name="barcode"
                                     class="form-control ">
                             </div>
                             <div class="col-md-6 col-sm-6 ">

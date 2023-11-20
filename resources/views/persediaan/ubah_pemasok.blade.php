@@ -33,28 +33,34 @@
         <input id="Uemail" name="Uemail" required="required" value="{{ $pemasok->email }}" class="form-control ">
     </div>
 </div><br>
+
+{{-- Item --}}
+<div class="item form-group">
+    <label class="col-form-label col-md-3 col-sm-3 label-align" for="addItem">Item <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 ">
+        <select name="AddItemBarang" id="addItemBarang" class="form-control" style="width: 200px;">
+            <option value="">Pilih Item</option>
+
+            @foreach ($barang as $b)
+                <option value="{{ $b->nomor }}">{{ $b->nama }}</option>
+            @endforeach
+        </select>
+
+        <button type="button" onclick="tmbahItem({{ $pemasok->id }})" class="btn btn-round btn-success"
+            style="margin-left: 20px;">Tambah
+            Item</button>
+    </div>
+</div>
+
 <h3>Daftar Item</h3>
 <br>
-
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
             role="tab" aria-controls="nav-home" aria-selected="true">Barang Mentah</button>
         <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
             role="tab" aria-controls="nav-profile" aria-selected="false">Produk</button>
-
-        <div class="col-md text-right">
-            <select name="AddItemBarang" id="addItemBarang" class=form-control">
-                <option value="">Pilih Item</option>
-
-                @foreach ($barang as $b)
-                    <option value="{{ $b->id }}">{{ $b->nama }}</option>
-                @endforeach
-            </select>
-
-            <button type="button" onclick="tmbahItem()" class="btn btn-round btn-success">Tambah
-                Item</button>
-        </div>
     </div>
 
 </nav>
@@ -69,24 +75,16 @@
                 <th>Nama</th>
                 <th style="width: 10%">Hapus</th>
             </tr>
-            @php
-                $urut = 0;
-            @endphp
+
 
             @foreach ($pemasok->barang as $pb)
-                @php
-                    $urut += 1;
-                @endphp
                 <tr>
-                    <td class="itemRow">{{ $urut }}</td>
+                    <td>{{ $pb->nomor }}</td>
                     <td>{{ $pb->nama }}</td>
                     <td>
-                        <form method="POST" action="{{ route('pemasok.destroy', $pemasok->id) }}">
-                            @csrf
-                            <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm"
-                                data-toggle="tooltip" type="button">Hapus</button>
-                        </form>
+                        {{-- <input name="_method" type="hidden" value="DELETE"> --}}
+                        <button type="button" onclick="hapusItem('{{ $pb->nomor }}' , this)" class="btn btn-danger"
+                            id="hapus_{{ $pb->id }}">Hapus</button>
                     </td>
                 </tr>
             @endforeach
@@ -95,31 +93,20 @@
 
     {{-- Produk --}}
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-        <table class="table table-striped jambo_table bulk_action" id="datatable">
+        <table class="table table-striped jambo_table bulk_action" id="tableProduk">
             <tr>
                 <th style="width: 20%">No</th>
                 <th>Nama</th>
                 <th style="width: 10%">Hapus</th>
             </tr>
 
-            @php
-                $urut = 0;
-            @endphp
-
             @foreach ($pemasok->produk as $pp)
-                @php
-                    $urut += 1;
-                @endphp
                 <tr>
-                    <td>{{ $urut }}</td>
+                    <td>{{ $pp->produk_id }}</td>
                     <td>{{ $pp->nama }}</td>
                     <td>
-                        <form method="POST" action="{{ route('pemasok.destroy', $pemasok->id) }}">
-                            @csrf
-                            <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm"
-                                data-toggle="tooltip" type="button">Hapus</button>
-                        </form>
+                        <button type="button" onclick="hapusItem('{{ $pp->produk_id }}' , this)" class="btn btn-danger"
+                            id="hapus_{{ $pp->id }}">Hapus</button>
                     </td>
                 </tr>
             @endforeach
@@ -130,38 +117,72 @@
 <script>
     $(document).ready(function() {
         $("#addItemBarang").select2();
-
     });
 
     var item = 'barang';
     var count = $(".itemRow").length;
 
-    function tmbahItem() {
-        
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    function tmbahItem(id) {
         count++;
+
         nama = $("#addItemBarang  option:selected").text();
+        idItem = $("#addItemBarang").val();
+
+        // console.log(idItem);
 
         var htmlRows = '';
-                htmlRows += '<tr>';
-                htmlRows += '<td>'+count+'</td>';
-                htmlRows += '<td>'+nama+'</td>';
-                htmlRows += '<td><button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" type="button">Hapus</button></td>';
-                htmlRows += '</tr>';
+        htmlRows += '<tr>';
+        htmlRows += '<td>' + idItem + '</td>';
+        htmlRows += '<td><input type="text" name="item[]" id="item_' + count +
+            '" class="form-control-plaintext" autocomplete="off" value="' + nama + '" readonly></td>';
+        htmlRows +=
+            '<td><button type="button" class="btn btn-danger" onclick="hapusItem('+'idItem.toString()'+', this)" id="hapus_' + idItem + '">Hapus</button></td>';
+        htmlRows += '</tr>';
+        if ($('#addItemBarang').val() != '') {
+            $.ajax({
+                type: 'post',
+                url: '/pemasok-item',
+                data: {
+                    'nama': nama,
+                    'id': id,
+                    'jenis': item,
+                    'idItem': idItem,
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data.msg == 'masuk') {
+                        if (item == 'barang') {
+                            $('#tableBarang').append(htmlRows);
+                        } else {
+                            $('#tableProduk').append(htmlRows);
+                        }
 
-        if($('#addItemBarang').val() != ''){
-            $('#tableBarang').append(htmlRows);
-            console.log(count);
+                    } else {
+                        alert('data sudah ada');
+                    }
+                },
+                error: function() {
+                    alert("error!!!!");
+                }
+            });
         }
     }
 
     var count = $(".itemRow").length;
     $(document).on('click', '#nav-home-tab', function() {
+        count = $(".itemRow").length;
         // console.log("barang");
 
         var variable = '' +
             '<option value="">Pilih Item</option>' +
             '@foreach ($barang as $b)' +
-            '<option value="{{ $b->id }}">{{ $b->nama }}</option>' +
+            '<option value="{{ $b->nomor }}">{{ $b->nama }}</option>' +
             '@endforeach' +
             '';
 
@@ -170,16 +191,42 @@
     });
 
     $(document).on('click', '#nav-profile-tab', function() {
-        // console.log("produk");
-
+        count = $(".itemRowP").length;
         var variable = '' +
             '<option value="">Pilih Item</option>' +
             '@foreach ($produk as $p)' +
-            '<option value="{{ $p->id }}">{{ $p->nama }}</option>' +
+            '<option value="{{ $p->produk_id }}">{{ $p->nama }}</option>' +
             '@endforeach' +
             '';
 
         $('#addItemBarang').html(variable);
         item = "produk";
     });
+
+    function hapusItem(id, row) {
+
+        console.log(id);
+        pemasokID = '{{ $pemasok->id }}';
+        $.ajax({
+            type: 'post',
+            url: '/pemasok-hapus-item',
+            data: {
+                'item': id,
+                'pemasok': pemasokID,
+                'jenis': item,
+            },
+            success: function(data) {
+                console.log(data);
+
+
+
+            },
+            error: function() {
+                alert("error!!!!");
+            }
+        });
+        var row = row.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+
+    }
 </script>

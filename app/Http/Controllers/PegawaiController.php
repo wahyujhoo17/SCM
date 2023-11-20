@@ -75,9 +75,16 @@ class PegawaiController extends Controller
      * @param  \App\Models\pegawai  $pegawai
      * @return \Illuminate\Http\Response
      */
-    public function edit(pegawai $pegawai)
+    public function edit($id)
     {
         //
+        $pegawai = pegawai::where('id', $id)->first();
+        $jabatan = jabatan::all();
+
+        return response()->json(array(
+            'msg' => view('pegawai.ubahModal' , compact('pegawai', 'jabatan'))->render()
+        ),200);
+
     }
 
     /**
@@ -87,9 +94,19 @@ class PegawaiController extends Controller
      * @param  \App\Models\pegawai  $pegawai
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatepegawaiRequest $request, pegawai $pegawai)
+    public function update(Request $request , $id)
     {
         //
+        $jabatan = $request->get('Ujabatan');
+        $email = $request->get('Uemail');
+
+        $pegawai = pegawai::where('user_id' , $id)->first();
+        $pegawai->jabatan_id = $jabatan;
+        $pegawai->email = $email;
+        $pegawai->save();
+
+
+        return redirect()->back()->with('alert', 'Data berhasil diubah!');
     }
 
     /**

@@ -15,4 +15,8 @@ class pegawai extends Model
     {
         return $this->belongsTo(jabatan::class, 'jabatan_id');
     }
+    public function stok_opname()
+    {
+        return $this->hasMany(stok_opname::class, 'user_id' , 'id');
+    }
 }

@@ -219,20 +219,22 @@
 
         function editData(id) {
             // console.log(1);
-            // $.ajax({
-            //     type: 'GET',
-            //     url: '{{ route('pegawai.edit', 'id') }}',
-            //     data: {
-            //         id
-            //     },
-            //     success: function(data) {
-            //         $("#UbahModal").html(data.msg);
-            //     },
-            //     error: function() {
-            //         alert("error!!!!");
-            //     }
-            // }); //end of ajax
-            // console.log(2);
+            $.ajax({
+                type: 'GET',
+                url: 'pegawai/' + id + '/edit',
+                data: {
+                    id
+                },
+                success: function(data) {
+                    // console.log(data.msg);
+                    $("#UbahModal").html(data.msg);
+                },
+                error: function() {
+                    alert("error!!!!");
+                }
+            }); //end of ajax
+
+            $('#editform').attr('action', 'pegawai/' + id);
         }
     </script>
 @endsection

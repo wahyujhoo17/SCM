@@ -20,4 +20,9 @@ class gudang extends Model
         return $this->belongsToMany(produk::class, 'gudang_has_produk','gudang_id','produk_id')->withPivot('jumlah');
     }
 
+    public function stok_opname()
+    {
+        return $this->hasMany(stok_opname::class, 'gudang_id','id');
+    }
+
 }

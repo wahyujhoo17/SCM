@@ -373,11 +373,11 @@
             }
         });
 
-        var option = '';
+        
         const harga = [];
+        var option = '';
 
         function getItem() {
-
             pemasokID = document.getElementById('pemasok').value;
             jenis = document.getElementById('jenis_barang').value;
             $.ajax({
@@ -393,7 +393,7 @@
                     if (data.msg.length != 0) {
                         for (var k in data.msg) {
 
-                            console.log(k, data.msg[k].harga_beli);
+                            // console.log(k, data.msg[k].harga_beli);
 
                             harga.push({
                                 id: data.msg[k].id,
@@ -402,6 +402,11 @@
 
                             option += '<option value="' + data.msg[k].id + '">' + data.msg[k].nama + '</option>'
                         }
+                        $('#productId_1').html(option);
+                        console.log('op'+option);
+                    }
+                    else{
+                        option = '<option value=""></option>';
                         $('#productId_1').html(option);
                     }
                 },
@@ -413,22 +418,19 @@
         }
 
         $('#jenis_barang').change(function() {
-            option = '<option value=""></option>';
             harga.length = 0;
             getItem();
-            console.log(option);
+
         })
 
         //IF SUPPLIER CHANGE
         $('#pemasok').change(function() {
-            option = '<option value=""></option>';
             harga.length = 0;
             getItem();
-            console.log(option);
+
         })
 
         function tambah() {
-            option = '<option value=""></option>';
             harga.length = 0;
             getItem();
 
@@ -437,12 +439,13 @@
         var count = $(".itemRow").length;
 
         $(document).on('click', '#addRows', function() {
+            
             Item = document.getElementById('productId_' + count + '').value;
             Qty = document.getElementById('quantity_' + count + '').value;
             Price = document.getElementById('price_' + count + '').value;
             Total = document.getElementById('total_' + count + '').value;
 
-            if (Item && Qty && Price && Total != '') {
+            if (Item && Qty && Price && Total != '' && count >=0) {
                 count++;
 
                 var htmlRows = '';
@@ -463,16 +466,13 @@
                 htmlRows += '</tr>';
 
                 $('#invoiceItem').append(htmlRows);
-
-                $('#productId_' + count + '').html(option);
+                $('#productId_' + count + "").html(option);
                 $("#productId_" + count + "").select2();
 
             } else {
 
             }
         });
-
-
 
         $(document).on('click', '#removeRows', function() {
             $(".itemRow:checked").each(function() {
@@ -517,6 +517,8 @@
             });
 
             document.getElementById("price_" + $split[1]).value = res['harga']; 
+            document.getElementById("quantity_" + $split[1]).value = "1"; 
+            calculateTotal();
         }
     </script>
     <script>

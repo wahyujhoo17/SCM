@@ -47,6 +47,33 @@ class PenjualanController extends Controller
      * @param  \App\Http\Requests\StorepenjualanRequest  $request
      * @return \Illuminate\Http\Response
      */
+    
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\penjualan  $penjualan
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        //
+        $val = $request->get('value');
+
+        if ($val == 'barcode') {
+
+            $produk = produk::where('barcode', $id)->first();
+            return response()->json(array(
+                'produk' => $produk
+            ));
+        } else {
+
+            $produk = produk::where('id', $id)->first();
+            return response()->json(array(
+                'produk' => $produk
+            ));
+        }
+    }
     public function store(Request $request)
     {
         //
@@ -67,7 +94,7 @@ class PenjualanController extends Controller
          
          $pembeli_id =explode("|" ,$request->get('nama-pembeli'));
          $metode_bayar_id = $request->get('metode_bayar');
-         $total_harga = $request->get('total_harga');
+         $total_harga = str_replace('.','',$request->get('total_harga')) ;
          $total_bayar = $request->get('nominal');
          $diskon = $request->get('diskon');
 
@@ -99,32 +126,6 @@ class PenjualanController extends Controller
 
          return redirect()->back()->with('alert', 'Pembelian Berhasil!');
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\penjualan  $penjualan
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, $id)
-    {
-        //
-        $val = $request->get('value');
-
-        if ($val == 'barcode') {
-
-            $produk = produk::where('barcode', $id)->first();
-            return response()->json(array(
-                'produk' => $produk
-            ));
-        } else {
-
-            $produk = produk::where('id', $id)->first();
-            return response()->json(array(
-                'produk' => $produk
-            ));
-        }
     }
 
     /**
@@ -172,9 +173,5 @@ class PenjualanController extends Controller
         return response()->json(array(
             'msg' => view('penjualan.detail-penjualan', compact('penjualan'))->render()
         ), 200);
-
-        // return response()->json(array(
-        //     'msg' => " masokk"
-        // ));
     }
 }

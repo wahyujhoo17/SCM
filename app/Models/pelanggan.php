@@ -18,4 +18,12 @@ class pelanggan extends Model
     public function penjualan(){
         return $this->hasMany(penjualan::class, 'pelanggan_id' , 'id');
     }
+    public function pesanan(){
+        
+        return $this->hasMany(pesanan::class, 'pelanggan_id' , 'id');
+    }
+        public function invoice(){
+        
+        return $this->hasMany(invoice::class, 'pelanggan_id' , 'id');
+    }
 }

@@ -52,7 +52,7 @@
                                         <div class="row">
                                             <div class="col-md-12 text-right">
                                                 <button type="button" class="btn btn-primary" id="scane"
-                                                    data-toggle="modal" data-target=".modalScane">Scane</button>
+                                                    data-toggle="modal" data-target=".modalScane">Scan</button>
                                                 <button type="button" onclick="tambahkan()"
                                                     class="btn btn-warning">Tambahkan</button>
                                             </div>

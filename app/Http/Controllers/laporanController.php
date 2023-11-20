@@ -6,6 +6,9 @@ use App\Models\penjualan;
 use App\Models\produk;
 use Illuminate\Http\Request;
 use Nette\Utils\Json;
+use Illuminate\Support\Facades\DB;
+
+
 
 class laporanController extends Controller
 {
@@ -16,8 +19,20 @@ class laporanController extends Controller
      */
     public function index()
     {
+        $penjualan = penjualan::all();
         //
-        dd('masok index');
+        $ringkasanPenjualan = penjualan::groupByRaw('MONTH(tanggal) , YEAR(tanggal)')
+            ->selectRaw('MONTH(tanggal) as Bulan,YEAR(tanggal) as tahun, SUM(total_harga) AS total_penjualan')
+            ->get();
+
+        foreach ($ringkasanPenjualan as $revenue) {
+
+            $nomor_bulan = $revenue->Bulan;
+            $nama_bulan = date("F", strtotime("2023-$nomor_bulan-01"));
+            $revenue->Bulan= $nama_bulan;
+        }
+        
+        return view('laporan.ringkasan_laporan', ['data' => $ringkasanPenjualan]);
     }
 
     /**
@@ -85,28 +100,30 @@ class laporanController extends Controller
     {
         //
     }
-    public function laporanHarian(){
+    public function laporanHarian()
+    {
 
-        $penjualan = penjualan::orderBy('tanggal' , 'desc')->get();
-        
-        return view('laporan.laporan_harian' , compact('penjualan'));
+        $penjualan = penjualan::orderBy('tanggal', 'desc')->get();
+
+        return view('laporan.laporan_harian', compact('penjualan'));
     }
 
-    public function laporanProduk(){
+    public function laporanProduk()
+    {
         $produk = produk::all();
 
         $data = [];
-        for ($i=0; $i < count( $produk) ; $i++) { 
+        for ($i = 0; $i < count($produk); $i++) {
             $penjualan = $produk[$i]->nota_penjualan;
             // $data[] = $produk[$i]->nama;
-            
+
             $total = 0;
-            for ($j=0; $j < count($penjualan) ; $j++) { 
+            for ($j = 0; $j < count($penjualan); $j++) {
                 $detail = $penjualan[$j]->pivot->jumlah;
                 $total += $detail;
             }
 
-            $data[]= ['nama'=> $produk[$i]->nama , 'jumlah' => $total];
+            $data[] = ['nama' => $produk[$i]->nama, 'jumlah' => $total];
         }
 
         dd($data);

@@ -6,6 +6,7 @@ use App\Models\barang_mentah;
 use App\Models\pemasok;
 use App\Models\satuan;
 use Illuminate\Http\Request;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class BarangMentahController extends Controller
 {
@@ -42,6 +43,7 @@ class BarangMentahController extends Controller
      */
     public function store(Request $request)
     {
+        $id_generaor = IdGenerator::generate((['table'=>'barang' ,'field'=>'nomor' , 'length'=> 6 , 'prefix' =>'BM']));
         //
         $nama = $request->get('nama');
         $harga = $request->get('harga');
@@ -51,6 +53,7 @@ class BarangMentahController extends Controller
         $barang->nama = $nama;
         $barang->harga_beli = $harga;
         $barang->satuan_id = $satuanId;
+        $barang->nomor = $id_generaor;
         $barang->save();
 
         return redirect()->back() ->with('alert', 'Data berhasil ditambahkan!');

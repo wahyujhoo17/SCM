@@ -448,6 +448,7 @@
                 totalAmount += total;
             });
             $('#subTotal').val(rupiah(parseFloat(totalAmount)));
+            
             var taxRate = $("#taxRate").val();
             var subTotal = $('#subTotal').val();
             if (subTotal) {

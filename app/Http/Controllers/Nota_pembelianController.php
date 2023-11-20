@@ -94,7 +94,7 @@ class Nota_pembelianController extends Controller
                     'jumlah' => $inp_quantity, 'harga_beli' => $inp_harga,
                 ]);
             }
-            $update_harga = nota_pembelian::orderBy('id', 'DESC')->first();;
+            $update_harga = nota_pembelian::orderBy('id', 'DESC')->first();
             $update_harga->total_harga = $subTotal;
             $update_harga->save();
 
@@ -214,7 +214,7 @@ class Nota_pembelianController extends Controller
 
         $pembayaran->nota_pembelian()->attach($id);
 
-        if($tagihan == $jumlah_bayar){
+        if($tagihan <= $jumlah_bayar){
             if($nota_pembelian ->status_pembelian == 'belum dibayar'){
                 $nota_pembelian ->status_pembelian = 'selesai';
                 $nota_pembelian->save();

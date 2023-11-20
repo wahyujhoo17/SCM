@@ -14,11 +14,16 @@ class pembayaran extends Model
 
     public function nota_pembelian()
     {
-        return $this->belongsToMany(nota_pembelian::class ,'nota_pembelian_has_pembayaran','pembayaran_id','nota_pembelian_id');
+        return $this->belongsToMany(nota_pembelian::class, 'nota_pembelian_has_pembayaran', 'pembayaran_id', 'nota_pembelian_id');
     }
 
     public function jenis_pembayaran()
     {
-        return $this->belongTo(jenis_pembayaran::class ,'jenis_pembayaran_id');
+        return $this->belongTo(jenis_pembayaran::class, 'jenis_pembayaran_id');
+    }
+
+    public function invoice()
+    {
+        return $this->belongsToMany(invoice::class, 'invoice_has_pembayaran', 'pembayaran_id', 'invoice_id');
     }
 }

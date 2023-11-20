@@ -14,33 +14,6 @@
       <br>
       
 
-      <div class="d-flex justify-content-center"><h5>Area Gudang</h5></div>
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nama</th>
-
-
-          </tr>
-        </thead>
-        <tbody>
-          @php
-            $urutan =0;   
-          @endphp
-
-          @foreach($gudang->area_gudang as $gad)
-            @php
-                $urutan +=1;
-            @endphp
-            <tr>
-                <th scope="row">{{ $urutan }}</th>
-                <td>{{ $gad->nama }}</td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

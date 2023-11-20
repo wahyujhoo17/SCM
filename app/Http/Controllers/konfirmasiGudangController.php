@@ -59,7 +59,7 @@ class konfirmasiGudangController extends Controller
         if ($getNo[0] == 'PP') {
             $pb = new perputaran_produk();
             $pb->status = "masuk";
-            $pb->keterangan = $noNota;
+            $pb->keterangan = "Produk masuk dari nota menbelian : ".$noNota;
             $pb->user_id = Auth::user()->id;
             $pb->gudang_id = $idGudang;
             $pb->save();
@@ -87,7 +87,7 @@ class konfirmasiGudangController extends Controller
         } else {
             $pb = new perputaran_barang();
             $pb->status = "masuk";
-            $pb->keterangan = $noNota;
+            $pb->keterangan ="Produk masuk dari nota menbelian : ". $noNota;
             $pb->user_id = Auth::user()->id;
             $pb->gudang_id = $idGudang;
             $pb->save();

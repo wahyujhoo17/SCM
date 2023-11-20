@@ -66,7 +66,7 @@
                     class="form-control" autocomplete="off"></td>
 
             <td><input type="number" name="total[]" value="{{ $item->pivot->jumlah_barang * $item->harga_beli }}"
-                    id="total_1" class="form-control" autocomplete="off" readonly></td>
+                    id="total_{{ $row }}" class="form-control" autocomplete="off" readonly></td>
         </tr>
     @endforeach
 

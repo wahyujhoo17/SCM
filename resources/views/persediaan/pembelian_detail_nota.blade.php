@@ -149,13 +149,7 @@
                                             </tr>
                                         @else
                                         @endif
-
-                                        {{-- <tr id="bayar">
-                                            <th>Bayar: </th>
-                                            <td><input id="dibayar" name="jumlah_bayar" type="text"
-                                                    class="form-control"></td>
-                                        </tr> --}}
-
+                                        
                                     </tbody>
                                 </table>
                             </div>

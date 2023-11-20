@@ -44,7 +44,7 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        $id_generaor = IdGenerator::generate((['table'=>'produk' ,'field'=>'produk_id' , 'length'=> 5 , 'prefix' =>'PR']));
+        $id_generaor = IdGenerator::generate((['table'=>'produk' ,'field'=>'produk_id' , 'length'=> 6 , 'prefix' =>'PR']));
         //
         $data = new produk();
         $data->produk_id = $id_generaor;

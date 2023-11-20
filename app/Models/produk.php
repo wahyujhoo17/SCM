@@ -47,5 +47,23 @@ class produk extends Model
     {
         return $this->belongsToMany(penjualan::class, 'detail_nota_penjualan','produk_id','nota_penjualan_id')->withPivot('jumlah');
     }
+
+    public function stok_opname(){
+
+        return $this->belongsToMany(stok_opname::class, 'stok_opname_has_produk', 'produk_id', 'stok_opname_id')->withPivot('jumlah_sistem', 'jumlah_perhitungan' , 'selisih' , 'keterangan' , 'keterangan2');
+    }
+    public function mutasi_stok(){
+
+        return $this->hasMany(mutasi_stok::class, 'produk_id' , 'id');
+    }
+    public function pesanan(){
+
+        return $this->belongsToMany(pesanan::class, 'detail_pesanan', 'produk_id', 'pesanan_id')->withPivot('jumlah','harga_beli');
+    }
+
+    public function invoice(){
+
+        return $this->belongsToMany(invoice::class, 'invoice_has_produk', 'produk_id', 'invoice_id')->withPivot('jumlah','harga', 'total');
+    }
 }
 

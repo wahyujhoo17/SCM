@@ -20,7 +20,7 @@
     </div>
     <br>
 
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+    <table id="datatable" class="table table-striped jambo_table bulk_action" style="width:100%">
         <thead>
             <tr>
                 <th>NO Nota</th>
@@ -40,8 +40,8 @@
                     <td>{{ $p->nomor_nota }}</td>
                     <td>{{ $p->tanggal }}</td>
                     <td>{{ $p->pelanggan->nama }}</td>
-                    <td>{{ $p->total_harga }}</td>
-                    <td>{{ $p->total_harga }}</td>
+                    <td>{{ number_format($p->total_harga, 0, ',', '.') }}</td>
+                    <td>{{ $p->total_bayar }}</td>
                     <td>{{ $p->jenis_pembayaran->nama }}</td>
                     <td>{{ $p->outlet->nama }}</td>
                     <td><a href="#" data-toggle="modal" data-target=".modal-detail-penjualan"
