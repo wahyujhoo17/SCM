@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorepegawaiRequest;
 use App\Http\Requests\UpdatepegawaiRequest;
 use App\Models\jabatan;
+use App\Models\outlet;
 use App\Models\pegawai;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -55,6 +56,10 @@ class PegawaiController extends Controller
         $data->jabatan_id = $request->get('jabatan');
         $data->password = Hash::make('jayaabadi');
         $data->save();
+
+        if($request->get('jabatan') == 3){
+            $data->outlet()->attach($request->lokasi);
+        }
         return redirect()->back()->with('alert', 'Data berhasil ditambahkan!');
     }
 
@@ -64,9 +69,17 @@ class PegawaiController extends Controller
      * @param  \App\Models\pegawai  $pegawai
      * @return \Illuminate\Http\Response
      */
-    public function show(pegawai $pegawai)
+    public function show($id)
     {
         //
+        $expload = explode('-' , $id);
+        if($expload[1] == 'Casir'){
+
+            $outlet =outlet::all();
+            return response()->json(array(
+                'msg' => $outlet
+            ),200);
+        }
     }
 
     /**
@@ -80,9 +93,10 @@ class PegawaiController extends Controller
         //
         $pegawai = pegawai::where('id', $id)->first();
         $jabatan = jabatan::all();
+        $outlet = outlet::all();
 
         return response()->json(array(
-            'msg' => view('pegawai.ubahModal' , compact('pegawai', 'jabatan'))->render()
+            'msg' => view('pegawai.ubahModal' , compact('pegawai', 'jabatan', 'outlet'))->render()
         ),200);
 
     }
@@ -97,13 +111,27 @@ class PegawaiController extends Controller
     public function update(Request $request , $id)
     {
         //
+        $nama = $request->Unama;
+        $alamat = $request->Ualamat;
+        $telepon = $request->Utelepon;
         $jabatan = $request->get('Ujabatan');
         $email = $request->get('Uemail');
 
+
         $pegawai = pegawai::where('user_id' , $id)->first();
+        $pegawai->nama = $nama;
+        $pegawai->alamat = $alamat;
+        $pegawai->no_tlp = $telepon;
         $pegawai->jabatan_id = $jabatan;
         $pegawai->email = $email;
         $pegawai->save();
+
+        if($jabatan == 3){
+            $lokasi = $request->Ulokasi;
+
+            $pegawai->outlet()->sync($lokasi);
+        }
+
 
 
         return redirect()->back()->with('alert', 'Data berhasil diubah!');

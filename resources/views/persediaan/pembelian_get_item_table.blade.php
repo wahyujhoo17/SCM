@@ -6,10 +6,11 @@
         </div>
     </th>
     {{-- <th width="15%">Item No</th> --}}
-    <th width="35%">Item Name</th>
-    <th width="12%">Quantity</th>
-    <th width="20%">Price</th>
-    <th width="20%">Total</th>
+    <th width="35%">Nama</th>
+    <th width="12%">Jumlah</th>
+    <th>Satuan</th>
+    <th width="20%">Harga</th>
+    <th width="20%">Subtotal</th>
 </tr>
 @php
     $kodeid = explode('-', $pemesanan->no_nota);
@@ -20,13 +21,13 @@
 
     @foreach ($pemesanan->barang as $item)
         @php
-            $row += 1;
+            $row++;
         @endphp
-
         <tr>
             <td>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="itemRow custom-control-input" id="itemRow_{{ $row }}">
+                    <input type="checkbox" class="itemRow custom-control-input"
+                        id="itemRow_{{ $row }}">
                     <label class="custom-control-label" for="itemRow_{{ $row }}"></label>
                 </div>
             </td>
@@ -37,7 +38,7 @@
             </td>
             <td><input type="number" name="quantity[]" value="{{ $item->pivot->jumlah_barang }}"
                     id="quantity_{{ $row }}" class="form-control" autocomplete="off"></td>
-
+            <td><input type="text" class="form-control" readonly value="{{ $item->satuan->nama }}"></td>
             <td><input type="number" name="price[]" id="price_{{ $row }}" value="{{ $item->harga_beli }}"
                     class="form-control" autocomplete="off"></td>
 
@@ -47,6 +48,9 @@
     @endforeach
 @else
     @foreach ($pemesanan->produk as $item)
+    @php
+        $row++;
+    @endphp
         <tr>
             <td>
                 <div class="custom-control custom-checkbox">
@@ -61,7 +65,7 @@
             </td>
             <td><input type="number" name="quantity[]" value="{{ $item->pivot->jumlah_barang }}"
                     id="quantity_{{ $row }}" class="form-control" autocomplete="off"></td>
-
+            <td><input type="text" class="form-control-plaintext" readonly value="{{ $item->kategori->nama }}"></td>
             <td><input type="number" name="price[]" id="price_{{ $row }}" value="{{ $item->harga_beli }}"
                     class="form-control" autocomplete="off"></td>
 

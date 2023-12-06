@@ -136,6 +136,7 @@
                 }
                 dateMove.add(1).day();
             };
+            console.log(listDate);
             updateChart(listPenjualan, listDate);
         }
     </script>

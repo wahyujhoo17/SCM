@@ -34,15 +34,16 @@
             @endforeach
         </tbody>
     </table>
-@endsection
 
+    <canvas id="myChart" height="100"></canvas>
+@endsection
 
 @section('javascript')
     <script>
         let minDate, maxDate;
         $(function() {
 
-            var start = moment().subtract(1, 'year').startOf('month');
+            var start = moment().startOf('year');
             var end = moment();
 
             function cb(start, end) {
@@ -53,15 +54,19 @@
                 maxDate = end.format('MMMM YYYY');
 
                 table.draw();
+
+                updateChart();
             }
             $('#reportrange').daterangepicker({
                 startDate: start,
                 endDate: end,
                 ranges: {
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                    'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                    'Bulan Kemarin': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
                         'month').endOf('month')],
-                    'This Year': [moment().subtract(1, 'year').startOf('month'), moment()]
+                    'Tahun Ini': [moment().startOf('year'), moment()],
+                    'Tahun Kemarin': [moment().subtract(2, 'year').startOf('year'), moment().subtract(1,
+                        'year').endOf('year    ')],
                 }
             }, cb);
 
@@ -109,5 +114,56 @@
                 return false;
             }
         );
+    </script>
+
+    <script>
+        // Read data from the table
+        // var table = document.getElementById('table');
+
+
+        var labels = [];
+        var data = [];
+
+
+        // Create a chart
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var charts = new Chart(ctx, {
+            type: 'bar', // You can use 'bar', 'line', 'pie', etc.
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Penjualan',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                // Customize chart options as needed
+            }
+        });
+
+        function updateChart() {
+
+            var table = document.getElementById('table');
+
+            var labels = [];
+            var data = [];
+
+            for (var i = 1; i < table.rows.length; i++) {
+                var row = table.rows[i];
+                var label = row.cells[0].textContent;
+                var value = parseInt(row.cells[1].textContent.replace(/[^0-9]/g, ''));
+
+                labels.push(label);
+                data.push(value);
+            }
+
+            charts.data.labels = labels;
+            charts.data.datasets[0].data = data;
+            charts.update();
+        }
+
     </script>
 @endsection

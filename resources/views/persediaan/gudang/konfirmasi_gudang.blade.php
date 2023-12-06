@@ -24,9 +24,9 @@
                 <table class="table table-striped jambo_table bulk_action" id="datatable">
                     <thead>
                         <tr class="headings">
-                            <th class="column-title">No pembelian </th>
+                            <th class="column-title">No Nota </th>
                             <th class="column-title">Tanggal </th>
-                            <th class="column-title">Pemesan</th>
+                            <th class="column-title">Pegawai</th>
                             <th class="column-title">Pemasok </th>
                             <th class="column-title">Status </th>
                             <th class="column-title no-link last"><span class="nobr">Action</span>
@@ -54,12 +54,65 @@
                                 </td>
                             </tr>
                         @endforeach
+                        {{-- PRODUKSI --}}
+                        @foreach ($produksi as $prd)
+                            <tr class="even pointer" id="tr_{{ $prd->nomor }} ">
+                                <td>{{ $prd->nomor }}</td>
+                                <td>{{ $prd->tanggal_selesai }}</td>
+                                <td>{{ $prd->pegawai->nama }}</td>
+                                <td>-</td>
+                                <td>
+                                    <span class="badge badge-pill badge-info">Belum Dikonfirmasi</span>
+                                </td>
+
+                                <td class=" last"><a href="#" data-toggle="modal" data-target=".view-produksi"
+                                        onclick="detailProduksi('{{ $prd->id }}')">View</a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <h1>pablo</h1>
+            <br>
+            <div class="table-responsive">
+                <table class="table table-striped jambo_table bulk_action" id="tableKeluar" style="width: 100%">
+                    <thead>
+                        <tr class="headings">
+                            <th class="column-title">No Permintaan </th>
+                            <th class="column-title">Tanggal </th>
+                            <th class="column-title">Outlet</th>
+                            <th class="column-title">Alamat </th>
+                            <th class="column-title">Status </th>
+                            <th class="column-title no-link last"><span class="nobr">Action</span>
+                            </th>
+                            <th class="bulk-actions" colspan="7">
+                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span
+                                        class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($permintaan as $per)
+                            <tr class="even pointer" id="tr_{{ $per->id }} ">
+                                <td>{{ $per->nomor }}</td>
+                                <td>{{ $per->tanggal }}</td>
+                                <td>{{ $per->outlet->nama }}</td>
+                                <td>{{ $per->outlet->alamat }}</td>
+                                <td>
+                                    <span class="badge badge-pill badge-info">Belum Dikonfirmasi</span>
+                                </td>
+
+                                <td class=" last"><a href="#" data-toggle="modal" data-target=".view-permintaan"
+                                        onclick="detailKeluar('{{ $per->id }}')">View</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -70,6 +123,34 @@
         <div class="modal fade view-konfirmasi" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content" id="invoiceItem">
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- VIEW PERMINTAAN MODAL -->
+    <form method="POST" action="/konfirmasi-permintaan">
+        @csrf
+        <div class="modal fade view-permintaan" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content" id="viewPermintaan">
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- VIEW PERMINTAAN MODAL -->
+    <form method="POST" action="/produksi/konfirmasi">
+        {{-- @method('PUT'); --}}
+        @csrf
+        <div class="modal fade view-produksi" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content" id="viewProduksi">
+
                 </div>
             </div>
         </div>
@@ -135,6 +216,36 @@
                 }
             });
         }
+
+        function detailKeluar(id) {
+            $.ajax({
+                type: 'GET',
+                url: '/view-permintaan/' + id,
+                data: {},
+                success: function(data) {
+                    // console.log(data);
+                    $('#viewPermintaan').html(data.msg);
+                },
+                error: function() {
+                    alert("error!!!!");
+                }
+            });
+        }
+
+        function detailProduksi(id) {
+
+            $.ajax({
+                type: 'GET',
+                url: '/konfirmasi/produksi/' + id,
+                data: {},
+                success: function(data) {
+                    $('#viewProduksi').html(data.msg);
+                },
+                error: function() {
+                    alert("error!!!!");
+                }
+            });
+        }
     </script>
     <script>
         $('#nama-gudang').change(function() {
@@ -143,6 +254,28 @@
                 $gudang_id = 'id_gudang';
             @endphp
 
+        });
+
+        $('#tableKeluar').DataTable({
+            dom: "<'row'<'col-md-3'l><'col-md-5'B><'col-md-4'f>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5'i><'col-md-7'p>>",
+            buttons: [{
+                    extend: 'copy',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-outline-secondary   '
+                }
+            ],
+            "order": [
+                [0, 'desc']
+            ]
         });
     </script>
 @endsection

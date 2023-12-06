@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorepesananRequest;
 use App\Http\Requests\UpdatepesananRequest;
+use App\Models\invoice;
 use App\Models\pelanggan;
 use App\Models\pesanan;
 use App\Models\produk;
@@ -23,6 +24,7 @@ class PesananController extends Controller
         $pelanggan = pelanggan::all();
         $pesanan = pesanan::all();
         $produk = produk::all();
+        
         return view('invoice.daftar_pesanan', ['data' => $pesanan, 'pelanggan' => $pelanggan, 'produk' => $produk]);
     }
 

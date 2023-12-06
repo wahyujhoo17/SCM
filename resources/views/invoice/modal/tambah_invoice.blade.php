@@ -14,7 +14,9 @@
 </div><br>
 
 <script>
-    $('#alamat_pelanggan').val('{{ $pesanan->pelanggan->alamat }}');
+    
+    var address = `{{($pesanan->pelanggan->alamat)}}` ;
+    document.getElementById("alamat_pelanggan").value = address;
     $('#subTotal').val(rupiah({{ $pesanan->total_harga }}));
     $('#totalFinal').val(rupiah({{ $pesanan->total_harga }}));
 </script>

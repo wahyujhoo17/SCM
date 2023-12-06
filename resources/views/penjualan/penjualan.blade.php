@@ -62,7 +62,7 @@
 
                             </div>
                             <!-- Table row -->
-                            <form action="{{ route('penjualan.store') }}" method="post">
+                            <form action="{{ route('penjualan.store') }}" method="post" onsubmit="return validateForm()">
                                 @csrf
                                 <div class="row">
                                     <div class=" table">
@@ -76,8 +76,9 @@
                                                             <label class="custom-control-label" for="checkAll"></label>
                                                         </div>
                                                     </th>
-                                                    <th style="width: 11%">No Produk</th>
-                                                    <th style="width: 25%">Nama</th>
+                                                    <th style="width: 15%">#</th>
+                                                    <th>Nama</th>
+                                                    <th>Stok</th>
                                                     <th style="width: 15%">Jumlah</th>
                                                     <th>Harga</th>
                                                     <th>Subtotal</th>
@@ -91,8 +92,6 @@
 
                                         <button class="btn btn-danger delete" id="removeRows" type="button">-
                                             Delete</button>
-
-
 
                                     </div>
                                     <!-- /.col -->
@@ -116,10 +115,11 @@
                                     <span class="required">*</span>
                                 </label>
                             </div>
-                            <select name="outlet" id="outlet" required="required" class="form-control ">
-                                @foreach ($outlet as $o)
-                                    <option value="{{ $o->id }}">{{ $o->nama }}</option>
-                                @endforeach
+                            <select name="outlet" id="outlet" required="required" class="form-control">
+
+                                <option value="{{ Auth::user()->outlet[0]->id }}">{{ Auth::user()->outlet[0]->nama }}
+                                </option>
+
                             </select>
                             <br>
                             {{-- NAMA PEMBELI --}}
@@ -176,8 +176,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-form-label col-md-3 col-sm-3 ">Nominal <span
-                                    class="required">*</span></label>
+                            <label class="col-form-label col-md-3 col-sm-3 ">Nominal <span class="required">*</span></label>
                             <div class="col-md-9 col-sm-9 ">
                                 <input type="text" class="form-control" name="nominal" placeholder="Nominal Bayar"
                                     id="nominal" required>
@@ -198,7 +197,7 @@
                             <div class="  offset-md-3">
                                 {{-- <button type="button" class="btn btn-primary">Cancel</button> --}}
                                 <button class="btn btn-primary" type="reset">Reset</button>
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" id="submit" class="btn btn-success">Submit</button>
                             </div>
                         </div>
                         </form>
@@ -285,7 +284,7 @@
 
             total = $('#total_harga').val().replaceAll('.', '');
             nominal = $('#nominal').val().replaceAll('.', '');
-            console.log(nominal - total);
+            // console.log(nominal - total);
             $('#kembalian').val(rupiah(nominal - total));
         });
         //DISKON
@@ -316,10 +315,10 @@
                 totalAmount += total;
             });
 
-            var diskon =(totalAmount*$("#diskon").val())/100;
+            var diskon = (totalAmount * $("#diskon").val()) / 100;
 
             totalAmount = totalAmount - diskon;
-            console.log("diskon" + totalAmount);
+            // console.log("diskon" + totalAmount);
             $('#total_harga').val(rupiah(totalAmount));
         }
 
@@ -337,7 +336,7 @@
     <script>
         var count = $(".itemRow").length;
         //ADD DATA ON TABLE
-        function addTables(id, nama, harga) {
+        function addTables(id, nama, stok, harga) {
 
             calculateTotal();
 
@@ -355,8 +354,10 @@
                 count + '" name="id[]" value="' + id + '"></td>' +
                 '                                                <td><input type="text" readonly class="form-control-plaintext" id="nama_' +
                 count + '" name="nama[]" value="' + nama + '"></td>' +
+                '<td><input type"number" class="form-control-plaintext" value="' + stok + '" id="stok_' + count +
+                '" readonly></td>' +
                 '                                                <td><input type="number" value="1" id="quantity_' + count +
-                '" name="jumlah[]" class="form-control"/></td>' +
+                '" name="jumlah[]" class="form-control" oninput="validateNumber(this , this.id)"/><div id="validationMessage" class="text-danger"></div></td>' +
                 '                                                <td><input type="text" readonly class="form-control-plaintext" id="harga_' +
                 count + '" name="harga[]" value="' + rupiah(harga) + '"></td>' +
                 '                                                <td><input type="text" readonly class="form-control-plaintext" id="total_' +
@@ -367,6 +368,21 @@
             $('#itemTable').append(variable);
 
             calculateTotal();
+        }
+
+        function validateNumber(input, idInput) {
+            
+            var id = idInput.replace('quantity_', '');
+            var max = parseInt($('#stok_' + id).val());
+            var validationMessage = document.getElementById('validationMessage');
+
+            if (input.value > max) {
+                input.setCustomValidity('Value must be less than or equal to ' + max);
+                validationMessage.textContent = 'Melebihi ' + max;
+            } else {
+                input.setCustomValidity('');
+                validationMessage.textContent = '';
+            }
         }
         //
         function addItem(id, val) {
@@ -388,6 +404,7 @@
                     id = data.produk['produk_id'];
                     nama = data.produk['nama'];
                     harga = data.produk['harga_jual'];
+                    stok = data.jumlah;
 
                     param = 'tidak sama';
                     for (var i = 1; i <= count; i++) {
@@ -403,14 +420,14 @@
 
                         }
                     }
-                    console.log(param);
+                    // console.log(param);
                     if (param == "sama") {
                         Qty = parseInt($('#quantity_' + i).val());
                         $('#quantity_' + i).val(Qty + 1);
                         calculateTotal();
                     } else {
                         count++;
-                        addTables(id, nama, harga);
+                        addTables(id, nama, stok, harga);
                         calculateTotal();
                     }
 
@@ -480,4 +497,25 @@
             barcodeText.value = "";
         });
     </script>
+    <script>
+        function validateForm() {
+          // Lakukan pengecekan di sini
+          // Misalnya, cek apakah kondisi tertentu terpenuhi
+      
+          var isFormValid = true; 
+          nominal =  $('#nominal').val().replaceAll('.' , '');
+          total = $("#total_harga").val().replaceAll('.' , '');
+
+          if(parseInt(total) > parseInt(nominal)){
+            isFormValid = false;
+          }
+
+          if (isFormValid) {
+            return true;
+          } else {
+            swal("Pembayaran Gagal", "Nominal bayar kurang.", "error");
+            return false;
+          }
+        }
+      </script>
 @endsection

@@ -25,15 +25,13 @@
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button"
                 role="tab" aria-controls="nav-contact" aria-selected="false">Selesai</button>
 
-            <div class="col-md-2 col-sm-2  form-group has-feedback">
-                <input type="date" class="form-control has-feedback-left" id="inotautSuccess2">
-                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+            {{-- Time Select --}}
+            <div class="col-md-5 form-group has-feedback float-right">
+                <div id="reportrange" class="form-control">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span> <b class="caret"></b>
+                </div>
             </div>
-            <div class="col-md-2 col-sm-2  form-group has-feedback">
-                <input type="date" class="form-control has-feedback-left" id="inotautSuccess2">
-                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
-            </div>
-            <button type="button" class="btn btn-round btn-secondary">Mulai</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -41,7 +39,7 @@
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             <br>
             <div class="table-responsive">
-                <table class="table table-striped jambo_table bulk_action" id="datatable">
+                <table class="table table-striped jambo_table bulk_action" id="table">
                     <thead>
                         <tr class="headings">
                             <th class="column-title">No pembelian </th>
@@ -304,11 +302,6 @@
     </script>
 
     <script>
-        $('#datatable').dataTable({
-            "order": [
-                [1, 'desc']
-            ]
-        });
         $(document).ready(function() {
             $("#pemesanan").select2();
         });
@@ -467,5 +460,97 @@
             }
         }
         
+    </script>
+
+<script>
+    function printCertificate() {
+        const printContents = document.getElementById('detailNota').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload();
+    }
+</script>
+    <script>
+        let minDate, maxDate;
+        $(function() {
+
+            var start = moment().subtract(1, 'month');
+            var end = moment();
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                // Create date inputs
+                minDate = start.format('YYYY-MM-DD');
+                maxDate = end.format('YYYY-MM-DD');
+
+                table.draw();
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                        'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+            // console.log(minDate);
+        });
+
+
+        // Set up your table
+        table = $('#table').DataTable({
+            dom: "<'row'<'col-md-3'l><'col-md-5'B><'col-md-4'f>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5'i><'col-md-7'p>>",
+            buttons: [{
+                    extend: 'copy',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-outline-secondary   '
+                }
+            ],
+            "order": [
+                [6, 'asc']
+            ]
+        });
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function(settings, data, dataIndex) {
+                var min = minDate;
+                var max = maxDate;
+                var date = data[1].split(' ')[0] || 0; // Our date column in the table
+
+                // console.log(data[1].split(' ')[0]);
+
+                if (
+                    (min === null && max === null) ||
+                    (min === null && date <= max) ||
+                    (min <= date && max === null) ||
+                    (min <= date && date <= max)
+                ) {
+                    return true;
+                }
+                return false;
+
+            }
+        );
     </script>
 @endsection

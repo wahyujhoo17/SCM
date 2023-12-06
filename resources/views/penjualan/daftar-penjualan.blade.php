@@ -7,6 +7,30 @@
 @section('konten')
     <div class="clearfix"></div>
 
+    <div class="container mt-2 mb-2">
+        <div class="row">
+            <!-- Card for Number of Transactions -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">Total Transaksi</p>
+                        <h5 class="card-text ml-2" id="transaksi">0</h5>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Card for Total Sales -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">Total Penjualan</p>
+                        <h5 class="card-text ml-2" id="total">0</h5>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <div class="col-md form-group has-feedback">
@@ -23,7 +47,7 @@
     <table id="datatable" class="table table-striped jambo_table bulk_action" style="width:100%">
         <thead>
             <tr>
-                <th>NO Nota</th>
+                <th>No Nota</th>
                 <th>Tanggal</th>
                 <th>Nama Pelanggan</th>
                 <th>Sub Total</th>
@@ -34,7 +58,7 @@
             </tr>
         </thead>
 
-        <tbody> 
+        <tbody>
             @foreach ($penjualan as $p)
                 <tr id="tr_{{ $p->id }}">
                     <td>{{ $p->nomor_nota }}</td>
@@ -66,11 +90,34 @@
 
 @section('javascript')
     <script>
+        function sumColumn(tableId, columnIndex) {
+            var table = document.getElementById(tableId);
+            var sum = 0;
+            var row = 0;
 
+            for (var i = 1; i < table.rows.length; i++) {
+                row++;
+                // Assuming data starts from the second row (index 1)
+                var cell = table.rows[i].cells[columnIndex];
+                var cellValue = parseFloat(cell.textContent.replaceAll('.', ''));
+                
+                if (!isNaN(cellValue)) {
+                    sum += cellValue;
+                }
+            }
+
+            var totalElement = document.getElementById("total");
+            var transaksiElement = document.getElementById("transaksi");
+
+            totalElement.textContent ="Rp " +rupiah(sum);
+            transaksiElement.textContent = row;
+        }
+    </script>
+    <script>
         let minDate, maxDate;
         $(function() {
 
-            var start = moment().subtract(29, 'days');
+            var start = moment().startOf('day');
             var end = moment();
 
             function cb(start, end) {
@@ -81,6 +128,7 @@
                 maxDate = end.format('YYYY-MM-DD HH:mm:ss');
 
                 table.draw();
+                sumColumn("datatable", 3);
             }
 
             $('#reportrange').daterangepicker({
@@ -96,10 +144,8 @@
                         'month').endOf('month')]
                 }
             }, cb);
-
             cb(start, end);
 
-            // console.log(minDate);
         });
 
 
@@ -115,7 +161,6 @@
                 var min = minDate;
                 var max = maxDate;
                 var date = data[1] || 0; // Our date column in the table
-
                 if (
                     (min === null && max === null) ||
                     (min === null && date <= max) ||
@@ -125,9 +170,10 @@
                     return true;
                 }
                 return false;
-
+                
             }
         );
+
     </script>
 
     <script>
@@ -171,5 +217,6 @@
             document.body.innerHTML = originalContents;
             location.reload();
         }
+
     </script>
 @endsection

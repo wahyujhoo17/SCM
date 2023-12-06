@@ -66,8 +66,8 @@
                     <td>{{ $produk->barcode }}</td>
                     <td>{{ $produk->harga_jual }} </td>
                     @php
-                    $jumlah = 0;
-                @endphp
+                        $jumlah = 0;
+                    @endphp
                     <td>
                         <table style="width: 100%">
                             <tr>
@@ -75,18 +75,18 @@
                                 <th>Lokasi gudang</th>
                             </tr>
 
-                            @if ($produk->gudang == "[]")
-                                <td>0</td>
+                            @if ($produk->gudang == '[]')
+                                <td>-</td>
                                 <td>-</td>
                             @else
                                 @foreach ($produk->gudang as $pg)
-                                @php
-                                    $jumlah += $pg->pivot->jumlah ; 
-                                @endphp
-                                <tr>
-                                    <td>{{ $pg->pivot->jumlah }}</td>
-                                    <td>{{ $pg->nama }}</td>
-                                </tr>
+                                    @php
+                                        $jumlah += $pg->pivot->jumlah;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $pg->pivot->jumlah }}</td>
+                                        <td>{{ $pg->nama }}</td>
+                                    </tr>
                                 @endforeach
                             @endif
                         </table>
@@ -134,8 +134,7 @@
                                     class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 ">
-                                <input type="number" id="barcode" name="barcode"
-                                    class="form-control ">
+                                <input type="number" id="barcode" name="barcode" class="form-control ">
                             </div>
                             <div class="col-md-6 col-sm-6 ">
                                 <button type="button" id="scane" class="btn btn-outline-secondary" data-toggle="modal"
@@ -210,7 +209,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    
+
                     {{-- Scanner 2 --}}
                     <div id="barcode">
                         <video id="barcodevideo" autoplay></video>
@@ -227,6 +226,20 @@
 
 @section('javascript')
     <script>
+        //Alert Berhasil
+        var msg = '{{ Session::get('alert') }}';
+        var exist = '{{ Session::has('alert') }}';
+        if (exist) {
+            swal("Success", msg, "success");
+        }
+
+        // Alert Gagal
+        var msg = '{{ Session::get('alert_gagal') }}';
+        var exist = '{{ Session::has('alert_gagal') }}';
+        if (exist) {
+            swal("Gagal", msg, "error");
+        }
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -298,19 +311,6 @@
             $("#kategori").select2();
             $("#Ukategori").select2();
         });
-        //Alert Berhasil
-        var msg = '{{ Session::get('alert') }}';
-        var exist = '{{ Session::has('alert') }}';
-        if (exist) {
-            swal("Success", msg, "success");
-        }
-
-        // Alert Gagal
-        var msg = '{{ Session::get('alert_gagal') }}';
-        var exist = '{{ Session::has('alert_gagal') }}';
-        if (exist) {
-            swal("Gagal", msg, "error");
-        }
     </script>
 
     {{-- Barcode 2 --}}
@@ -324,8 +324,8 @@
             var name = $(this).data("name");
             event.preventDefault();
             swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
+                    title: `Apakah anda ingin mengapus data?`,
+                    text: "Jika data dihapus, maka akan terhapus permanen.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

@@ -24,8 +24,8 @@
                 <br>
                 @error('email')
                     <span class="" role="alert" style="margin-left: 10%">
-                        <strong>{{ $message }}</strong>
-                    </span>
+                        <strong style="color: red;font-size: 10px">{{ $message }}</strong>
+                    </span >
                 @enderror
                 <br />
                 <br />

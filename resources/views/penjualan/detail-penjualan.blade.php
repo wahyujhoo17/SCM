@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="  invoice-header">
                             <h1>
-                                <i class="fa fa-globe"></i> Invoice.
+                                <i class="fa fa-globe"></i> Penjualan.
                                 <small class="pull-right">{{ $newDate2 = date("d/m/Y", strtotime($penjualan->tanggal)) }}</small>
                             </h1>
                         </div>
@@ -121,7 +121,7 @@
                                         </tr>
                                         <tr>
                                             <th>Total:</th>
-                                            <td>{{ $penjualan->total_harga }}</td>
+                                            <td>{{number_format($penjualan->total_harga, 0, ',', '.')}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

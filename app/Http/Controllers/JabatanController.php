@@ -37,7 +37,7 @@ class JabatanController extends Controller
      * @param  \App\Http\Requests\StorejabatanRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorejabatanRequest $request)
+    public function store(Request $request)
     {
         //
         $data = new jabatan();

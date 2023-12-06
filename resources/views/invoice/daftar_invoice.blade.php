@@ -421,7 +421,7 @@
         // Alert Gagal
         var msg = '{{ Session::get('alert_gagal') }}';
         var exist = '{{ Session::has('alert_gagal') }}';
-        if (exist) {
+        if (exist) {    
             swal("Gagal", msg, "error");
         }
         var modal = document.getElementById('pModal');
@@ -793,7 +793,7 @@
                 }
             ],
             "order": [
-                [2, 'asc']
+                [6, 'asc']
             ]
         });
 

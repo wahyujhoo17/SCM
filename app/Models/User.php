@@ -47,4 +47,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(jabatan::class, 'jabatan_id');
     }
+    public function outlet(){
+        
+        return $this->belongsToMany(outlet::class, 'outlet_has_pegawai' , 'pegawai_id' , 'outlet_id');
+    }
 }

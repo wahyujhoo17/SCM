@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         //PENGECEKAN JATUH TEMPO
         $ldate = date('Y-m-d');
         foreach($invoice as $iv){
-            if($iv->jatuh_tempo <= $ldate){
+            if($iv->jatuh_tempo <= $ldate && $iv->tagihan >0){
                 $iv->status = "Jatuh Tempo";
                 $iv->save();
             }

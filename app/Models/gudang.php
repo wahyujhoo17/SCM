@@ -24,5 +24,9 @@ class gudang extends Model
     {
         return $this->hasMany(stok_opname::class, 'gudang_id','id');
     }
+    public function permintaan_stok()
+    {
+        return $this->hasMany(permintaanStokOutlet::class, 'gudang_id','id');
+    }
 
 }

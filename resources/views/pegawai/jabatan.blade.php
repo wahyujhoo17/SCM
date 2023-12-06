@@ -16,11 +16,12 @@
         </div>
     </div>
 
-    <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+    <table id="datatable" class="table table-striped jambo_table bulk_action" style="width:100%">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Nama</th>
+                <th>Aksi</th>
             </tr>
         </thead>
 

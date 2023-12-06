@@ -29,11 +29,11 @@
                         <div class="col-sm-4 invoice-col">
                             To
                             <address>
-                                <strong>{{ $nota->pegawai->nama }}</strong>
-                                <br>795 Freedom Ave, Suite 600
-                                <br>New York, CA 94107
-                                <br>Phone: 1 (804) 123-9876
-                                <br>Email: jon@ironadmin.com
+                                <strong>Jaya Abadi</strong>
+                                <br>Jalan Moroseneng Nomor 29
+                                <br>Lamongan, Jawa Timur
+                                <br>Phone: 0333-778834
+                                <br>Email: jayaabadi@gmail.com
                             </address>
                         </div>
                         <!-- /.col -->

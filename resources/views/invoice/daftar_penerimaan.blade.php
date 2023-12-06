@@ -81,6 +81,7 @@
                             <label for="invoice">Pilih Nomor Invoice</label>
                             <select name="invoice" id="invoice" class="form-control" style="width: 100%"
                                 onchange="getInvoice(this.value)">
+                                    <option value="">Pilih No Invoice</option>
                                 @foreach ($invoice as $inv)
                                     <option value="{{ $inv->id }}">{{ $inv->nomor }}</option>
                                 @endforeach

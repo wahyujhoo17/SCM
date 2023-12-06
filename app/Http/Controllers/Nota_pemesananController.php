@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\barang_mentah;
 use App\Models\nota_pemesanan;
 use App\Models\pemasok;
+use App\Models\produk;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +22,11 @@ class Nota_pemesananController extends Controller
         //
         $nota = nota_pemesanan::all();
         $pemasok = pemasok::all();
+        $produk = produk::all();
+        $barang = barang_mentah::all();
 
         // return view('pegawai.jabatan', ['data'=> $nb]);
-        return view('persediaan.pemesanan_stok', ['NP' => $nota, 'PM' => $pemasok]);
+        return view('persediaan.pemesanan_stok', ['NP' => $nota, 'PM' => $pemasok, 'produk' => $produk , 'barang' => $barang]);
     }
 
     /**

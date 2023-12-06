@@ -27,16 +27,13 @@
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button"
                 role="tab" aria-controls="nav-contact" aria-selected="false">Selesai</button>
 
-                {{-- Time Select --}}
-            <div class="col-md-2 col-sm-2  form-group has-feedback">
-                <input type="date" class="form-control has-feedback-left" id="inputSuccess2">
-                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+            {{-- Time Select --}}
+            <div class="col-md-5 form-group has-feedback float-right">
+                <div id="reportrange" class="form-control">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span> <b class="caret"></b>
+                </div>
             </div>
-            <div class="col-md-2 col-sm-2  form-group has-feedback">
-                <input type="date" class="form-control has-feedback-left" id="inputSuccess2">
-                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
-            </div>
-            <button type="button" class="btn btn-round btn-secondary">Mulai</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -44,7 +41,7 @@
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             <br>
             <div class="table-responsive">
-                <table class="table table-striped jambo_table bulk_action" id="datatable">
+                <table class="table table-striped jambo_table bulk_action" id="table">
                     <thead>
                         <tr class="headings">
                             <th class="column-title">No pembelian </th>
@@ -66,7 +63,7 @@
                         @foreach ($NP as $notaP)
                             <tr class="even pointer" id="tr_{{ $notaP->no_nota }} ">
                                 <td>{{ $notaP->no_nota }}</td>
-                                <td>{{ $notaP->tanggal }}</td>
+                                <td>{{ explode(' ', $notaP->tanggal)[0] }}</td>
                                 <td>{{ $notaP->pegawai->nama }}</td>
                                 <td>{{ $notaP->pemasok->nama }}</td>
                                 <td>
@@ -80,7 +77,8 @@
                                 </td>
                                 <td>{{ 'Rp ' . number_format($notaP->total_harga, 2, ',', '.') }}</td>
 
-                                <td class=" last"><a href="#" data-toggle="modal" data-target=".modal-detail-pemesanan"
+                                <td class=" last"><a href="#" data-toggle="modal"
+                                        data-target=".modal-detail-pemesanan"
                                         onclick="detail('{{ $notaP->no_nota }}')">View</a>
                                 </td>
                             </tr>
@@ -194,7 +192,7 @@
     <form method="POST" action="{{ route('pemesanan.store') }}">
         @csrf
         <div class="modal fade tambahStok" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Pesan Stok</h5>
@@ -245,10 +243,12 @@
                                             </div>
                                         </th>
                                         {{-- <th width="15%">Item No</th> --}}
-                                        <th width="35%">Item Name</th>
-                                        <th width="12%">Quantity</th>
-                                        <th width="20%">Price</th>
-                                        <th width="20%">Total</th>
+                                        <th style="width: 20%;" >Nama Item</th>
+                                        <th>Saran Pesanan</th>
+                                        <th>Jumlah</th>
+                                        <th>Satuan</th>
+                                        <th>Harga</th>
+                                        <th>Total</th>
                                     </tr>
                                     <tr>
                                         <td>
@@ -265,8 +265,11 @@
                                                 <option value=""></option>
                                             </select>
                                         </td>
+                                        <td><input type="number" class="form-control" id="eoq_1" autocomplete="off" readonly></td>
                                         <td><input type="number" name="quantity[]" id="quantity_1" class="form-control"
                                                 autocomplete="off"></td>
+                                        <td><input type="text" class="form-control-plaintext" value="-"
+                                                id="satuan_1" readonly></td>
                                         <td><input type="number" name="price[]" id="price_1" class="form-control"
                                                 autocomplete="off"></td>
                                         <td><input type="number" name="total[]" id="total_1" class="form-control"
@@ -373,7 +376,7 @@
             }
         });
 
-        
+
         const harga = [];
         var option = '';
 
@@ -392,20 +395,16 @@
 
                     if (data.msg.length != 0) {
                         for (var k in data.msg) {
-
                             // console.log(k, data.msg[k].harga_beli);
-
                             harga.push({
                                 id: data.msg[k].id,
                                 harga: data.msg[k].harga_beli
                             }, );
-
                             option += '<option value="' + data.msg[k].id + '">' + data.msg[k].nama + '</option>'
                         }
                         $('#productId_1').html(option);
-                        console.log('op'+option);
-                    }
-                    else{
+                        // console.log('op' + option);
+                    } else {
                         option = '<option value=""></option>';
                         $('#productId_1').html(option);
                     }
@@ -439,13 +438,13 @@
         var count = $(".itemRow").length;
 
         $(document).on('click', '#addRows', function() {
-            
+
             Item = document.getElementById('productId_' + count + '').value;
             Qty = document.getElementById('quantity_' + count + '').value;
             Price = document.getElementById('price_' + count + '').value;
             Total = document.getElementById('total_' + count + '').value;
 
-            if (Item && Qty && Price && Total != '' && count >=0) {
+            if (Item && Qty && Price && Total != '' && count >= 0) {
                 count++;
 
                 var htmlRows = '';
@@ -457,8 +456,11 @@
                 htmlRows += '<td><select name="productId[]" onchange="onCgangeItem(this.id)" id="productId_' +
                     count +
                     '" class="form-control selectItem" style="width: 100%;"><option value=""></option></select></td>';
+                htmlRows += '<td><input type="number" class="form-control" id="eoq_'+count+'" autocomplete="off" readonly></td>';
                 htmlRows += '<td><input type="number" name="quantity[]" id="quantity_' + count +
                     '" class="form-control quantity" autocomplete="off" ></td>';
+                htmlRows += '<td><input type="text" class="form-control-plaintext" value="-" id="satuan_' + count +
+                    '" readonly></td>';
                 htmlRows += '<td><input type="number" name="price[]" id="price_' + count +
                     '" class="form-control " autocomplete="off" ></td>';
                 htmlRows += '<td><input type="number" name="total[]" id="total_' + count +
@@ -516,8 +518,49 @@
                 return item.id == $value;
             });
 
-            document.getElementById("price_" + $split[1]).value = res['harga']; 
-            document.getElementById("quantity_" + $split[1]).value = "1"; 
+            kategori = $('#jenis_barang').val();
+            // console.log(kategori);
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            if (kategori == 'Produk') {
+                $.ajax({
+                    type: 'GET',
+                    url: '/produks/getProduk/' + $value,
+                    data: {},
+                    success: function(response) {
+                        document.getElementById("satuan_" + $split[1]).value = response.satuan;
+                        document.getElementById("eoq_" + $split[1]).value = response.EOQ;
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            } else {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/barang/getBarang/' + $value,
+                    data: {},
+                    success: function(response) {
+                        // Handle the response from the server, which could be the product details
+                        console.log(response);
+                        document.getElementById("satuan_" + $split[1]).value = response;
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+
+            // document.getElementById("satuan_" + $split[1]).value = satuan;
+            document.getElementById("price_" + $split[1]).value = res['harga'];
+            document.getElementById("quantity_" + $split[1]).value = "1";
             calculateTotal();
         }
     </script>
@@ -530,6 +573,84 @@
             document.body.innerHTML = originalContents;
             location.reload();
         }
-        
+    </script>
+    <script>
+        let minDate, maxDate;
+        $(function() {
+
+            var start = moment().subtract(1, 'month');
+            var end = moment();
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                // Create date inputs
+                minDate = start.format('YYYY-MM-DD');
+                maxDate = end.format('YYYY-MM-DD');
+
+                table.draw();
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                        'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+            // console.log(minDate);
+        });
+
+
+        // Set up your table
+        table = $('#table').DataTable({
+            dom: "<'row'<'col-md-3'l><'col-md-5'B><'col-md-4'f>>" +
+                "<'row'<'col-md-12'tr>>" +
+                "<'row'<'col-md-5'i><'col-md-7'p>>",
+            buttons: [{
+                    extend: 'copy',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-outline-secondary'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-outline-secondary   '
+                }
+            ],
+            "order": [
+                [1, 'desc']
+            ]
+        });
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function(settings, data, dataIndex) {
+                var min = minDate;
+                var max = maxDate;
+                var date = data[1] || 0; // Our date column in the table
+
+                if (
+                    (min === null && max === null) ||
+                    (min === null && date <= max) ||
+                    (min <= date && max === null) ||
+                    (min <= date && date <= max)
+                ) {
+                    return true;
+                }
+                return false;
+
+            }
+        );
     </script>
 @endsection

@@ -46,5 +46,18 @@ class barang_mentah extends Model
     {
         return $this->belongsTo(satuan::class, 'satuan_id');
     }
+    public function produk()
+    {
+        return $this->belongsToMany(produk::class ,'resep_produk','barang_id','produk_id')->withPivot('jumlah','satuan');
+    }
+    public function produksi()
+    {
+        return $this->belongsToMany(produksi::class, 'barang_diambil','barang_id','produksi_id')->withPivot('jumlah' , 'gudang_id');
+    }
+
+    public function kelebihan_barang()
+    {
+        return $this->belongsToMany(barang_lebih::class, 'detail_barang_lebih','barang_id','kelebihan_barang_id')->withPivot('jumlah');
+    }
 }
 

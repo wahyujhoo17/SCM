@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\kategori_produk;
 use App\Models\penjualan;
 use App\Models\produk;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class laporanController extends Controller
         $ringkasanPenjualan = penjualan::groupByRaw('MONTH(tanggal) , YEAR(tanggal)')
             ->selectRaw('MONTH(tanggal) as Bulan,YEAR(tanggal) as tahun, SUM(total_harga) AS total_penjualan')
             ->get();
+        
 
         foreach ($ringkasanPenjualan as $revenue) {
 
@@ -112,20 +114,11 @@ class laporanController extends Controller
     {
         $produk = produk::all();
 
-        $data = [];
-        for ($i = 0; $i < count($produk); $i++) {
-            $penjualan = $produk[$i]->nota_penjualan;
-            // $data[] = $produk[$i]->nama;
+        return view('laporan.laporan-produk', compact('produk'));
+    }
+    public function laporanKategori(){
 
-            $total = 0;
-            for ($j = 0; $j < count($penjualan); $j++) {
-                $detail = $penjualan[$j]->pivot->jumlah;
-                $total += $detail;
-            }
-
-            $data[] = ['nama' => $produk[$i]->nama, 'jumlah' => $total];
-        }
-
-        dd($data);
+        $kategori = kategori_produk::all();
+        return view('laporan.laporan-kategori', compact('kategori'));
     }
 }

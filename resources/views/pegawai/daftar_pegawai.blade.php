@@ -10,7 +10,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-right">
-                <button type="button" class="btn btn-round btn-success" data-toggle="modal" data-target=".modalpegawai">Tambah
+                <button type="button" class="btn btn-round btn-success" data-toggle="modal" data-target=".modalpegawai"
+                    onclick="ifTambah()">Tambah
                     Karyawan</button>
             </div>
         </div>
@@ -108,14 +109,28 @@
                         </div>
                         {{-- jabatan --}}
                         <div class="item form-group">
-                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="jabatan">jabatan <span
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="jabatan">Jabatan <span
                                     class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 ">
-                                <select class="form-control py-4" name="jabatan" id="jabatan" style="width: 100%;">
+                                <select class="form-control py-4" name="jabatan" id="jabatan" style="width: 100%;"
+                                    onchange="handleOptionChange(this)">
+                                    <option value="">Pilih Jabatan</option>
                                     @foreach ($kt as $jabatan)
                                         <option value="{{ $jabatan->id }}">{{ $jabatan->nama }} </option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- PKJLOJAS --}}
+                        <div class="item form-group" id="divLog" style="display: none">
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="lokasi">lokasi <span
+                                    class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <select class="form-control py-4" name="lokasi" id="lokasi" style="width: 100%;">
+
                                 </select>
                             </div>
                         </div>
@@ -125,7 +140,8 @@
                     <div class="modal-footer">
                         <button type="button" id="batal" class="btn btn-outline-secondary"
                             data-dismiss="modal">Batal</button>
-                        <input type="submit" class="btn btn-primary" id="tambahkan" name="insert" value="Tambahkan" />
+                        <input type="submit" class="btn btn-primary" id="tambahkan" name="insert"
+                            value="Tambahkan" />
                     </div>
                 </div>
             </div>
@@ -163,6 +179,7 @@
         $(document).ready(function() {
             $("#jabatan").select2();
             $("#Ujabatan").select2();
+            $("#lokasi").select2();
         });
         // Alert berhasil
         var msg = '{{ Session::get('alert') }}';
@@ -235,6 +252,46 @@
             }); //end of ajax
 
             $('#editform').attr('action', 'pegawai/' + id);
+        }
+    </script>
+
+    <script>
+        var myDiv = document.getElementById("divLog");
+
+        function ifTambah() {
+            myDiv.style.display = "none";
+        }
+
+        function handleOptionChange(selectElement) {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var selectedName = selectedOption.text;
+            var selectedValue = selectElement.value;
+
+            $.ajax({
+                type: 'GET',
+                url: 'pegawai/' + selectedValue + '-' + selectedName,
+                data: {},
+                success: function(data) {
+
+                    if (data) {
+                        myDiv.style.display = 'block';
+                        option = '';
+
+                        for (let index = 0; index < data.msg.length; index++) {
+                            // console.log(data.msg[index]['nama']);
+                            id = data.msg[index]['id'];
+                            value = data.msg[index]['nama'];
+                            option += '<option value="' + id + '">' + value + '</option>';
+                        }
+                        // Get the select element
+                        var select = document.getElementById("lokasi");
+                        select.innerHTML = option;
+                    }
+                },
+                error: function() {
+                    alert("error!!!!");
+                }
+            });
         }
     </script>
 @endsection

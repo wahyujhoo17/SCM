@@ -119,4 +119,9 @@ class BarangMentahController extends Controller
     {
         //
     }
+    public function getBarang($id){
+        
+        $barang = barang_mentah::find($id);
+        return response()->make($barang->satuan->nama, 200);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\invoice;
 use App\Models\jenis_pembayaran;
 use App\Models\pembayaran;
+use App\Models\pesanan;
 use Illuminate\Http\Request;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
@@ -19,13 +20,13 @@ class PenerimaanController extends Controller
     {
         //
         $showModal = false;
-        $idG = IdGenerator::generate((['table' => 'pembayaran', 'field' => 'nomor', 'length' => 13, 'prefix' => 'INVPAY-' . date('y')]));
+        $idG = IdGenerator::generate((['table' => 'pembayaran', 'field' => 'nomor', 'length' => 17, 'prefix' => 'INVPAY-' . date('y')]));
         $id = "";
         $jenisPembayaran = jenis_pembayaran::all();
-        $invoice = invoice::where('status','!=','Lunas')->get();
+        $invoice = invoice::where('status', '!=', 'Lunas')->get();
         //
         $pembayaran = pembayaran::where("nomor", "LIKE", "\\" . "INVPAY-" . "%")->get();
-        return view('invoice.daftar_penerimaan', compact('showModal', 'invoice', 'id', 'idG', 'jenisPembayaran' , 'pembayaran'));
+        return view('invoice.daftar_penerimaan', compact('showModal', 'invoice', 'id', 'idG', 'jenisPembayaran', 'pembayaran'));
     }
 
     /**
@@ -68,10 +69,24 @@ class PenerimaanController extends Controller
             //UPADT DATA INVOICE
             $invoice->tagihan = 0;
             $invoice->status = "Lunas";
+
+            if ($invoice->nomor_pesanan != null) {
+                //Ubah Status Pesanan
+                $pesanan = pesanan::where('nomor', $invoice->nomor_pesanan)->first();
+                if ($pesanan != null) {
+                    if($pesanan->pengiriman != '[]'){
+                        $pesanan->status_pesanan = "Selesai";
+                        $pesanan->save();
+                    }
+                    else{
+                        $pesanan->status_pesanan = "Menunggu Pengiriman";
+                        $pesanan->save();
+                    }
+                }
+            }
         } else {
             $min = $tagihan - $nominalBayar;
             $pembayaran->sisa_tagihan = $min;
-
             //UPADT DATA INVOICE
             $invoice->tagihan = $min;
         }
@@ -86,7 +101,7 @@ class PenerimaanController extends Controller
         $idG = IdGenerator::generate((['table' => 'pembayaran', 'field' => 'nomor', 'length' => 13, 'prefix' => 'INVPAY-' . date('y')]));
         $id = "";
         $jenisPembayaran = jenis_pembayaran::all();
-        $invoice = invoice::where('status','!=','Lunas')->get();
+        $invoice = invoice::where('status', '!=', 'Lunas')->get();
         $pembayaran = pembayaran::where("nomor", "LIKE", "\\" . "INVPAY-" . "%")->get();
 
         return view('invoice.daftar_penerimaan', compact('showModal', 'invoice', 'id', 'idG', 'jenisPembayaran', 'pembayaran'))->with('alert', 'Penerimaan berhasil ditambahkan !');
@@ -119,7 +134,7 @@ class PenerimaanController extends Controller
         //
         $showModal = true;
         $idG = IdGenerator::generate((['table' => 'pembayaran', 'field' => 'nomor', 'length' => 15, 'prefix' => 'INVPAY-' . date('y') . date('d')]));
-        $invoice = invoice::where('status','!=', 'Lunas')->get();
+        $invoice = invoice::where('status', '!=', 'Lunas')->get();
         $jenisPembayaran = jenis_pembayaran::all();
         $pembayaran = pembayaran::where("nomor", "LIKE", "\\" . "INVPAY-" . "%")->get();
         return view('invoice.daftar_penerimaan', compact('showModal', 'invoice', 'id', 'idG', 'jenisPembayaran', 'pembayaran'));

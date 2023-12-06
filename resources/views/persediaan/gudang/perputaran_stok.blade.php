@@ -24,7 +24,7 @@
                 <table class="table table-striped jambo_table bulk_action" id="datatable">
                     <thead>
                         <tr class="headings">
-                            <th class="column-title">No </th>
+                            <th class="column-title">Nomor </th>
                             <th class="column-title">Nama Barang </th>
                             <th class="column-title">Tanggal</th>
                             <th class="column-title">Jumlah </th>
@@ -38,16 +38,17 @@
                         @php
                             $urut = 0;
                         @endphp
+                        {{-- {{ $pb }} --}}
                         @foreach ($pb as $b)
                             @foreach ($b->barang as $barang)
                                 @php
                                     $urut += 1;
                                 @endphp
                                 <tr>
-                                    <td>{{ $urut }}</td>
+                                    <td>{{ $barang->nomor }}</td>
                                     <td>{{ $barang->nama }}</td>
                                     <td>{{ $b->tanggal }}</td>
-                                    <td>{{ $barang->pivot->jumlah }}</td>
+                                    <td>{{ $barang->pivot->jumlah.' '.$barang->satuan->nama }}</td>
                                     <td>{{ $b->keterangan }}</td>
                                     <td>{{ $b->status }}</td>
                                     <td>{{ $b->gudang_id }}</td>
@@ -108,13 +109,13 @@
     <script>
         $('#datatable').dataTable({
             "order": [
-                [2, 'asc']
+                [2, 'desc']
             ]
         });
 
         $('#datatable2').dataTable({
             "order": [
-                [2, 'asc']
+                [2, 'desc']
             ]
         });
     </script>

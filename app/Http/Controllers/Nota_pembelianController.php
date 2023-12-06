@@ -208,7 +208,13 @@ class Nota_pembelianController extends Controller
         $pembayaran->tagihan = $tagihan;
         $pembayaran->jenis_pembayaran_id = $metode_bayar;
         $pembayaran->total_bayar = $jumlah_bayar;
-        $pembayaran->sisa_tagihan = $tagihan - $jumlah_bayar;
+        if(($tagihan - $jumlah_bayar) < 0){
+            $pembayaran->sisa_tagihan =0;
+        }
+        else{
+            $pembayaran->sisa_tagihan = $tagihan - $jumlah_bayar;
+        }
+
         $pembayaran->save();
         // $p = pembayaran::find(3);
 

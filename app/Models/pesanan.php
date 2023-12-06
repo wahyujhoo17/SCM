@@ -19,4 +19,10 @@ class pesanan extends Model
     public function pelanggan(){
         return $this->belongsTo(pelanggan::class,'pelanggan_id');
     }
+    public function pengiriman(){
+        return $this->hasMany(pengiriman::class, 'pesanan_id' , 'id');
+    }
+
+
+    
 }

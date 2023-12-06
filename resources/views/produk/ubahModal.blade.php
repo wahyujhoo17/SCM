@@ -15,7 +15,7 @@
                             </label>
                             <div class="col-md-6 col-sm-6 ">
                                 <input type="text" id="Ubarcode" value="{{ $pr->barcode }}" name="Ubarcode"
-                                    required="required" class="form-control ">
+                                     class="form-control ">
                             </div>
                             <div class="col-md-6 col-sm-6 ">
                                 <button type="button" id="Uscane" class="btn btn-outline-secondary"

@@ -22,7 +22,7 @@
             class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 ">
-        <input type="number" id="Utelepon" value="{{ $pr->no_tlp}}" name="Utelepon" required="required"
+        <input type="text" id="Utelepon" value="{{ $pr->no_tlp}}" name="Utelepon" required="required"
             class="form-control ">
     </div>
 </div>

@@ -29,20 +29,19 @@
                         <div class="col-sm-4 invoice-col">
                             To
                             <address>
-                                <strong>{{ $nota->pegawai->nama }}</strong>
-                                <br>795 Freedom Ave, Suite 600
-                                <br>New York, CA 94107
-                                <br>Phone: 1 (804) 123-9876
-                                <br>Email: jon@ironadmin.com
+                                <strong>Jaya Abadi</strong>
+                                <br>Jalan Moroseneng Nomor 29
+                                <br>Lamongan, Jawa Timur
+                                <br>Phone: 0333-778834
+                                <br>Email: jayaabadi@gmail.com
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
                             <b>Nomer Nota: {{ $nota->no_nota }}</b>
                             <br>
-                            <b>Payment Due:</b> 2/22/2014
-                            <br>
-                            <b>Account:</b> 968-34567
+
+                          
                         </div>
                         <!-- /.col -->
                     </div>
@@ -54,8 +53,9 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Qty</th>
-                                        <th>Produk</th>
+                                        <th>Jumlah</th>
+                                        <th>Satuan</th>
+                                        <th>Item</th>
                                         <th style="width: 59%">Harga</th>
                                         <th>Subtotal</th>
                                     </tr>
@@ -65,6 +65,7 @@
                                         @foreach ($nota->barang as $dl)
                                             <tr>
                                                 <td>{{ $dl->pivot->jumlah_barang }}</td>
+                                                <td>{{ $dl->satuan->nama }}</td>
                                                 <td>{{ $dl->nama }}</td>
                                                 <td>{{ 'Rp ' . number_format($dl->pivot->harga_beli, 2, ',', '.') }}
                                                 </td>
@@ -77,6 +78,7 @@
                                             <tr>
                                                 {{-- <td>{{ $dl }}</td> --}}
                                                 <td>{{ $dl->pivot->jumlah_barang }}</td>
+                                                <td>{{ $dl->kategori->nama }}</td>
                                                 <td>{{ $dl->nama }}</td>
                                                 <td>{{ 'Rp ' . number_format($dl->pivot->harga_beli, 2, ',', '.') }}
                                                 </td>
@@ -95,41 +97,17 @@
                     <div class="row">
                         <!-- accepted payments column -->
                         <div class="col-md-6">
-                            <p class="lead">Payment Methods:</p>
-                            <img src="images/visa.png" alt="Visa">
-                            <img src="images/mastercard.png" alt="Mastercard">
-                            <img src="images/american-express.png" alt="American Express">
-                            <img src="images/paypal.png" alt="Paypal">
-                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya
-                                handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                            </p>
+
                         </div>
                         <!-- /.col -->
                         <div class="col-md-6">
-                            <p class="lead">Pembayaran(tanggal)</p>
+                            {{-- <p class="lead">Pembayaran(tanggal)</p> --}}
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th style="width:50%">Subtotal:</th>
+                                            <th style="width:50%">Total:</th>
                                             <td>{{ 'Rp ' . number_format($nota->total_harga, 2, ',', '.') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Biaya Pajak:</th>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Biaya Pengiriman:</th>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total:</th>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Dibayar:</th>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>

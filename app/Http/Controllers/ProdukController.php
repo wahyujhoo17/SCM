@@ -53,7 +53,9 @@ class ProdukController extends Controller
         $data->harga_jual = $request->get('harga');
         $data->kategori_produk_id = $request->get('kategori');
         $data->save();
-        return redirect()->back() ->with('alert', 'Data berhasil ditambahkan!');
+
+        // return redirect()->back()->with('alert', 'Data berhasil diubah!');
+        return redirect()->back()->with('alert', 'Data berhasil ditambahkan!');
     }
 
     /**
@@ -103,7 +105,8 @@ class ProdukController extends Controller
         $data->harga_jual = $request->get('Uharga');
         $data->kategori_produk_id = $request->get('Ukategori');
         $data->save();
-        return redirect()->back()->with('alert', 'Data berhasil di ubah');
+
+        return redirect()->back()->with('alert', 'Data berhasil diubah!');
     }
 
     /**
@@ -134,5 +137,13 @@ class ProdukController extends Controller
             'msg' => view('produk.ubahModal' , compact('pr' , 'kt'))->render()
         ),200);
 
+    }
+    public function getProduk($id){
+        
+        $produk = produk::find($id);
+
+        return response()->json(array(
+            'satuan' => $produk->kategori->nama , 'EOQ' =>$produk->EOQ
+        ),200);
     }
 }

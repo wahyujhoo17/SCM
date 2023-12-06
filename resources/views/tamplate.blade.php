@@ -69,7 +69,7 @@
                                     <ul class="nav child_menu">
                                         <li><a href="/pemesanan">Pemesanan Stok</a></li>
                                         <li><a href="/pembelian">Nota Pembelian</a></li>
-                                        <li><a href="icons.html">EOQ</a></li>
+                                        <li><a href="/EOQ">Metode Perhitungan Stok</a></li>
                                         <li><a href="/pemasok">Daftar Pemasok</a></li>
                                         <li><a></i> Stok <span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
@@ -90,7 +90,7 @@
                                 <li><a><i class="fa fa-industry"></i> Produksi <span
                                             class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="/pengajuan-produksi">Pengajuan Produksi</a></li>
+                                        {{-- <li><a href="/pengajuan-produksi">Pengajuan Produksi</a></li> --}}
                                         <li><a href="/daftar-produksi">Daftar Produksi</a></li>
                                         <li><a href="/acuan-produksi">Acuan Produksi</a></li>
                                     </ul>
@@ -100,7 +100,7 @@
                                     <ul class="nav child_menu">
                                         <li><a href="/daftar-invoice">Daftar Invoice</a></li>
                                         <li><a href="/daftar-pesanan">Daftar Pesanan</a></li>
-                                        <li><a href="/daftar-penerimaan">Daftar Penerimaan</a></li>
+                                        <li><a href="/daftar-penerimaan">Daftar Penerimaan Pembayaran</a></li>
                                         <li><a href="/daftar-pengiriman">Daftar Pengiriman</a></li>
                                     </ul>
                                 </li>
@@ -126,15 +126,14 @@
                                         <li><a> Laporan Penjualan<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
                                                 <li><a href="/laporan">Ringkasan Penjualan</a></li>
-                                                <li><a href="projects.html">Detail Penjualan</a></li>
+                                                <li><a href="/detail-laporan-penjualan">Detail Penjualan</a></li>
                                                 <li><a href="/laporan-harian">Penjualan Harian</a></li>
-                                                <li><a href="projects.html">Waktu Teramai</a></li>
                                             </ul>
                                         </li>
                                         <li><a>Laporan Produk<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
                                                 <li><a href="/laporan-produk">Penjualan per Produk</a></li>
-                                                <li><a href="projects.html">Penjualan per Kategori</a></li>
+                                                <li><a href="/laporan-kategori">Penjualan per Kategori</a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -146,10 +145,10 @@
                                         <li><a href="/daftar-penjualan">Daftar Penjualan</a></li>
                                         <li><a> Persediaan Outlet<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
-                                                <li><a href="#level1_1">Daftar Outlet</a></li>
-                                                <li><a href="#level1_2">Stok Outlet</a></li>
-                                                <li><a href="#level1_2">Kirim Stok</a></li>
-                                                <li><a href="#level1_2">Mutasi Stok</a></li>
+                                                <li><a href="/daftar-outlet">Daftar Outlet</a></li>
+                                                <li><a href="/stok-outlet">Stok Outlet</a></li>
+                                                <li><a href="/kirim-stok">Kirim Stok</a></li>
+                                                <li><a href="/mutasi-outlet">Mutasi Stok</a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -197,9 +196,8 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right"
                                     aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="javascript:;"> Profile</a>
-                                    <a class="dropdown-item" href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
+                                    <a class="dropdown-item" href="/setting"> Profile</a>
+                                    <a class="dropdown-item" href="/setting"">
                                         <span>Settings</span>
                                     </a>
                                     <a class="dropdown-item" href="javascript:;">Help</a>
@@ -310,7 +308,7 @@
             <!-- footer content -->
             <footer>
                 <div class="pull-right">
-                    Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                    {{-- Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a> --}}
                 </div>
                 <div class="clearfix"></div>
             </footer>

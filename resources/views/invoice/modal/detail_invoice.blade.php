@@ -18,11 +18,11 @@
                         <div class="col-sm-4 invoice-col">
                             Dari.
                             <address>
-                                <strong>Jaya Abadi.</strong>
-                                <br>795 Freedom Ave, Suite 600
-                                <br>Lamongan Jl.Moroseneng No.12
-                                <br>Telepon: (+62) 83831211636
-                                <br>Email: jaya-abadi@gmail.com
+                                <strong>Jaya Abadi</strong>
+                                <br>Jalan Moroseneng Nomor 29
+                                <br>Lamongan, Jawa Timur
+                                <br>Phone: 0333-778834
+                                <br>Email: jayaabadi@gmail.com
                             </address>
                         </div>
                         <!-- /.col -->
